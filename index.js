@@ -7,19 +7,18 @@ import { FirstPersonControls } from "three/addons/controls/FirstPersonControls.j
 
 let scene, camera, renderer;
 
-// raycasting
-let myObjects = [];
-let inactiveMat, activeMat;
-let mouse;
-
 // first person controls
 let controls;
 let clock = new THREE.Clock();
 
 // spatial audio
 let audioListener;
-let audioListenerMesh;
+// let audioListenerMesh;
 let audioSources = [];
+
+// raycasting
+let inactiveMat, activeMat;
+let mouse;
 
 function init() {
   // create a scene in which all other objects will exist
@@ -56,6 +55,45 @@ function init() {
   // add audio listener and sources
   addSpatialAudio();
 
+  // materials for raycasting the sound objects
+  activeMat = new THREE.MeshBasicMaterial({ color: "red" });
+  inactiveMat = new THREE.MeshBasicMaterial();
+
+  // add a raycast on click
+  mouse = new THREE.Vector2(0, 0);
+  document.addEventListener(
+    "mousemove",
+    (ev) => {
+      // three.js expects 'normalized device coordinates' (i.e. between -1 and 1 on both axes)
+      mouse.x = (ev.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(ev.clientY / window.innerHeight) * 2 + 1;
+    },
+    false
+  );
+
+  let raycaster = new THREE.Raycaster();
+  document.addEventListener("click", (ev) => {
+    raycaster.setFromCamera(mouse, camera);
+
+    // calculate objects intersecting the picking ray
+    const intersects = raycaster.intersectObjects(audioSources);
+
+    // reset all materials
+    for (let i = 0; i < audioSources.length; i++) {
+      audioSources[i].material = inactiveMat;
+    }
+    for (let i = 0; i < intersects.length; i++) {
+      intersects[i].object.material = activeMat;
+      // place a cube
+      // let boxGeo = new THREE.BoxGeometry(10, 10, 10);
+      // let boxMat = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+      // let cube = new THREE.Mesh(boxGeo, boxMat);
+      // cube.position.set(intersects[i].x, intersects[i].y, intersects[i].z);
+      // scene.add(cube);
+      // console.log(cube);
+    }
+  });
+
   window.addEventListener("resize", onWindowResize);
 
   loop();
@@ -64,26 +102,20 @@ function init() {
 function addSpatialAudio() {
   // first lets add our audio listener.  This is our ear (or microphone) within the 3D space.
   audioListener = new THREE.AudioListener();
-  camera.add(audioListener); // attaches the audio listener to camera so that it follows as user moves.
 
-  // create a 3D mesh so we can see the location of the audio listener
-  // this is not strictly necessary, but can be helpful for debugging
-  // audioListenerMesh = new THREE.Mesh(
-  //   new THREE.BoxGeometry(1, 1, 1),
-  //   new THREE.MeshBasicMaterial({ color: "red" })
-  // );
-  // audioListenerMesh.add(audioListener);
-  // audioListenerMesh.position.set(0, 0, 5);
-  // scene.add(audioListenerMesh);
+  // attach the audio listener to camera so that it follows as user moves.
+  camera.add(audioListener);
 
   // create an audio loader which will load our audio files:
   const audioLoader = new THREE.AudioLoader();
 
   // then let's add some audio sources
+  // use the inactive material by default
   for (let i = 1; i < 3; i++) {
     let mesh = new THREE.Mesh(
       new THREE.SphereGeometry(1, 12, 12),
-      new THREE.MeshBasicMaterial({ color: "blue" })
+      // new THREE.MeshBasicMaterial({ color: "blue" })
+      inactiveMat
     );
 
     mesh.position.set(10 * (-1) ** i, 0, 5);
