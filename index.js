@@ -1,8 +1,9 @@
 import * as THREE from "three";
 
 // PointerLockControls: wasd + mouse direction
-// import { PointerLockControls } from "three/controls/PointerLockControls.js";
-import { PointerLockControls } from "three/addons/controls/PointerLockControls.js";
+// import { PointerLockControls } from "three/addons/controls/PointerLockControls.js";
+
+import { FirstPersonControls } from "three/addons/controls/FirstPersonControls.js";
 
 let scene, camera, renderer;
 
@@ -11,17 +12,14 @@ let myObjects = [];
 let inactiveMat, activeMat;
 let mouse;
 
-// add pointerLock controls
+// first person controls
 let controls;
-let moveForward = false;
-let moveBackward = false;
-let moveLeft = false;
-let moveRight = false;
+let clock = new THREE.Clock();
 
-// movement calculations
-let prevTime = performance.now();
-let velocity = new THREE.Vector3();
-let direction = new THREE.Vector3();
+// spatial audio
+let audioListener;
+let audioListenerMesh;
+let audioSources = [];
 
 function init() {
   // create a scene in which all other objects will exist
@@ -42,80 +40,72 @@ function init() {
   let gridHelper = new THREE.GridHelper(25, 25);
   scene.add(gridHelper);
 
-  // show and hide instructions using lock
-  controls = new PointerLockControls(camera, document.body);
+  // add pointer lock controls
+  controls = new FirstPersonControls(camera, renderer.domElement);
+  controls.movementSpeed = 5;
+  controls.lookSpeed = 0.03;
+
+  // hide instructions on click
   let blocker = document.getElementById("blocker");
   let instructions = document.getElementById("instructions");
 
   instructions.addEventListener("click", function () {
-    controls.lock();
-  });
-
-  controls.addEventListener("lock", function () {
-    instructions.style.display = "none";
     blocker.style.display = "none";
   });
 
-  controls.addEventListener("unlock", function () {
-    blocker.style.display = "block";
-    instructions.style.display = "";
-  });
+  // add audio listener and sources
+  addSpatialAudio();
 
-  scene.add(controls.getObject());
-
-  // wasd controls
-  let onKeyDown = function (event) {
-    switch (event.code) {
-      case "ArrowUp":
-      case "KeyW":
-        moveForward = true;
-        break;
-
-      case "ArrowLeft":
-      case "KeyA":
-        moveLeft = true;
-        break;
-
-      case "ArrowDown":
-      case "KeyS":
-        moveBackward = true;
-        break;
-
-      case "ArrowRight":
-      case "KeyD":
-        moveRight = true;
-        break;
-    }
-  };
-
-  let onKeyUp = function (event) {
-    switch (event.code) {
-      case "ArrowUp":
-      case "KeyW":
-        moveForward = false;
-        break;
-
-      case "ArrowLeft":
-      case "KeyA":
-        moveLeft = false;
-        break;
-
-      case "ArrowDown":
-      case "KeyS":
-        moveBackward = false;
-        break;
-
-      case "ArrowRight":
-      case "KeyD":
-        moveRight = false;
-        break;
-    }
-  };
-
-  document.addEventListener("keydown", onKeyDown);
-  document.addEventListener("keyup", onKeyUp);
+  window.addEventListener("resize", onWindowResize);
 
   loop();
+}
+
+function addSpatialAudio() {
+  // first lets add our audio listener.  This is our ear (or microphone) within the 3D space.
+  audioListener = new THREE.AudioListener();
+  camera.add(audioListener); // attaches the audio listener to camera so that it follows as user moves.
+
+  // create a 3D mesh so we can see the location of the audio listener
+  // this is not strictly necessary, but can be helpful for debugging
+  // audioListenerMesh = new THREE.Mesh(
+  //   new THREE.BoxGeometry(1, 1, 1),
+  //   new THREE.MeshBasicMaterial({ color: "red" })
+  // );
+  // audioListenerMesh.add(audioListener);
+  // audioListenerMesh.position.set(0, 0, 5);
+  // scene.add(audioListenerMesh);
+
+  // create an audio loader which will load our audio files:
+  const audioLoader = new THREE.AudioLoader();
+
+  // then let's add some audio sources
+  for (let i = 1; i < 3; i++) {
+    let mesh = new THREE.Mesh(
+      new THREE.SphereGeometry(1, 12, 12),
+      new THREE.MeshBasicMaterial({ color: "blue" })
+    );
+
+    mesh.position.set(10 * (-1) ** i, 0, 5);
+
+    let audioSource = new THREE.PositionalAudio(audioListener);
+
+    // load the audio file into the positional audio source
+    audioLoader.load(i + ".mp3", function (buffer) {
+      audioSource.setBuffer(buffer);
+      audioSource.setDistanceModel("exponential");
+      audioSource.setRefDistance(1);
+      audioSource.setRolloffFactor(3);
+      audioSource.setVolume(1);
+      audioSource.setLoop(true);
+      audioSource.play();
+    });
+
+    mesh.add(audioSource);
+    scene.add(mesh);
+
+    audioSources.push(mesh);
+  }
 }
 
 function onWindowResize() {
@@ -128,35 +118,15 @@ function onWindowResize() {
 function loop() {
   window.requestAnimationFrame(loop); // pass the name of your loop function into this function
 
-  // movement calculation
-  const time = performance.now();
-
-  if (controls.isLocked === true) {
-    console.log("controls locked");
-    const delta = (time - prevTime) / 100;
-
-    velocity.x -= velocity.x * 10.0 * delta;
-    velocity.z -= velocity.z * 10.0 * delta;
-    // velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
-
-    direction.z = Number(moveForward) - Number(moveBackward);
-    direction.x = Number(moveRight) - Number(moveLeft);
-    direction.normalize();
-    // this ensures consistent movements in all directions
-
-    if (moveForward || moveBackward) velocity.z -= direction.z * 10.0 * delta;
-    if (moveLeft || moveRight) velocity.x -= direction.x * 10.0 * delta;
-
-    // console.log(controls);
-    controls.moveRight(-velocity.x * delta);
-    controls.moveForward(-velocity.z * delta);
-    controls.getObject().position.y += velocity.y * delta;
-  }
-
-  prevTime = time;
-
+  controls.update(clock.getDelta());
   // finally, take a picture of the scene and show it in the <canvas>
   renderer.render(scene, camera);
 }
 
-init();
+let hasInitialized = false;
+window.addEventListener("click", () => {
+  if (!hasInitialized) {
+    hasInitialized = true;
+    init();
+  }
+});
