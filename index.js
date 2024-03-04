@@ -20,6 +20,9 @@ let audioSources = [];
 let inactiveMat, activeMat;
 let mouse;
 
+// text
+// let text
+
 function init() {
   // create a scene in which all other objects will exist
   scene = new THREE.Scene();
@@ -28,21 +31,27 @@ function init() {
   let aspect = window.innerWidth / window.innerHeight;
   camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
   camera.position.z = 5; // place the camera in space
-  camera.position.y = 5;
-  camera.lookAt(0, 0, 0);
+  camera.position.y = 2;
+  camera.lookAt(0, 1, 0);
 
   // the renderer will actually show the camera view within our <canvas>
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  let gridHelper = new THREE.GridHelper(25, 25);
-  scene.add(gridHelper);
+  // let gridHelper = new THREE.GridHelper(25, 25);
+  // scene.add(gridHelper);
 
   // add pointer lock controls
   controls = new FirstPersonControls(camera, renderer.domElement);
   controls.movementSpeed = 5;
   controls.lookSpeed = 0.03;
+
+  // controls.minPolarAngle = Math.PI / 2;
+  // controls.maxPolarAngle = Math.PI / 2;
+
+  controls.noFly = true;
+  controls.lookVertical = false;
 
   // hide instructions on click
   let blocker = document.getElementById("blocker");
@@ -58,6 +67,13 @@ function init() {
   // materials for raycasting the sound objects
   activeMat = new THREE.MeshBasicMaterial({ color: "red" });
   inactiveMat = new THREE.MeshBasicMaterial();
+
+  // get the card element from DOM
+  let card = document.getElementsByClassName("card")[0];
+  // console.log(card);
+  card.addEventListener("click", (ev) => {
+    ev.target.style.display = "none";
+  });
 
   // add a raycast on click
   mouse = new THREE.Vector2(0, 0);
@@ -84,6 +100,7 @@ function init() {
     }
     for (let i = 0; i < intersects.length; i++) {
       intersects[i].object.material = activeMat;
+      card.style.display = "block";
       // place a cube
       // let boxGeo = new THREE.BoxGeometry(10, 10, 10);
       // let boxMat = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -155,10 +172,12 @@ function loop() {
   renderer.render(scene, camera);
 }
 
-let hasInitialized = false;
-window.addEventListener("click", () => {
-  if (!hasInitialized) {
-    hasInitialized = true;
-    init();
-  }
-});
+init();
+
+// let hasInitialized = false;
+// window.addEventListener("click", () => {
+//   if (!hasInitialized) {
+//     hasInitialized = true;
+//     init();
+//   }
+// });

@@ -38,3 +38,34 @@ body {
     font-size: 14px;
     cursor: pointer;
   }
+
+  .card {
+    display: none;
+    font-Size: 2.1vh;
+    width: 40%;
+    padding: 8vh;
+    margin: 0 auto;
+    line-height: 4vh;
+    /* border: 2px solid rgba(0, 0, 0, 0.3); */
+    border-radius: 24px;
+    background-color: rgba(255, 255, 255, 0.3);
+    color: white;
+    /* position: absolute; */
+    /* top: 50vh; */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1; 
+    animation: fadeInAnimation;
+    animation-duration: 2s;
+    animation-iteration-count: 1; 
+    animation-fill-mode: forwards; 
+  }
+
+  @keyframes fadeInAnimation {
+
+    0% {opacity: 0; }
+    100% {opacity: 1;}
+    
+    }
