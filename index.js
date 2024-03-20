@@ -111,6 +111,20 @@ function loadModel() {
     object.position.set(0, -0.05, 0);
     scene.add(object);
   });
+
+  loader.load("./island.fbx", function (object) {
+    object.scale.multiplyScalar(0.12);
+    object.position.set(10, -0.05, -8);
+    object.rotateY(Math.PI / 3);
+    scene.add(object);
+  });
+
+  loader.load("./island.fbx", function (object) {
+    object.scale.multiplyScalar(0.12);
+    object.position.set(-20, -0.05, -15);
+    object.rotateY(-Math.PI / 6);
+    scene.add(object);
+  });
 }
 
 function onWindowResize() {
