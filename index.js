@@ -5,11 +5,46 @@ import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
 import { Water } from "three/addons/objects/Water.js";
 import { Sky } from "three/addons/objects/Sky.js";
 
+import { Island } from "./island.js";
+
 let scene, camera, renderer;
 
 let controls, water, sun;
 
-function init() {
+let islandAmei, islandBucika;
+
+// first create a loader
+// let loader = new FBXLoader();
+
+// Function that returns a promise which resolves with the loaded model
+// function loadModel(url) {
+//   return new Promise((resolve, reject) => {
+//     loader.load(url, (model) => resolve(model), undefined, reject);
+//   });
+// }
+
+// Function to clone the mesh
+// function cloneMesh(originalMesh) {
+//   const clonedGeometry = originalMesh.geometry.clone();
+//   //   const clonedMaterial = originalMesh.material.clone();
+//   let clonedMaterial;
+
+//   if (Array.isArray(originalMesh.material)) {
+//     // Clone each material in the array
+//     clonedMaterial = originalMesh.material.map((material) => material.clone());
+//   } else {
+//     // Clone the single material
+//     clonedMaterial = originalMesh.material.clone();
+//   }
+
+//   const clonedMesh = new THREE.Mesh(clonedGeometry, clonedMaterial);
+//   return clonedMesh;
+// }
+
+// spatial audio
+let audioListener;
+
+async function init() {
   scene = new THREE.Scene();
 
   let aspect = window.innerWidth / window.innerHeight;
@@ -17,6 +52,9 @@ function init() {
   camera.position.z = 5; // place the camera in space
   camera.position.y = 1;
   camera.lookAt(0, 0.7, 0);
+
+  audioListener = new THREE.AudioListener();
+  camera.add(audioListener);
 
   renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -96,36 +134,42 @@ function init() {
 
   window.addEventListener("resize", onWindowResize);
 
-  loadModel();
+  // islands
+  islandAmei = new Island(audioListener);
+  // ensure the model is loaded before adding it to the scene, otherwise would raise errors
+  await islandAmei.loadModel("./island.fbx");
+  await islandAmei.loadAudio("./audio/amei.mp3");
+  islandAmei.playAudio();
+  scene.add(islandAmei.mesh);
 
   loop();
 }
 
-function loadModel() {
-  // first create a loader
-  let loader = new FBXLoader();
+// function loadModel() {
+//     // first create a loader
+//     let loader = new FBXLoader();
 
-  // then load the file and add it to your scene
-  loader.load("./island.fbx", function (object) {
-    object.scale.multiplyScalar(0.12);
-    object.position.set(0, -0.05, 0);
-    scene.add(object);
-  });
+//   // then load the file and add it to your scene
+//   loader.load("./island.fbx", function (object) {
+//     object.scale.multiplyScalar(0.12);
+//     object.position.set(0, -0.05, 0);
+//     scene.add(object);
+//   });
 
-  loader.load("./island.fbx", function (object) {
-    object.scale.multiplyScalar(0.12);
-    object.position.set(10, -0.05, -8);
-    object.rotateY(Math.PI / 3);
-    scene.add(object);
-  });
+//   loader.load("./island.fbx", function (object) {
+//     object.scale.multiplyScalar(0.12);
+//     object.position.set(10, -0.05, -8);
+//     object.rotateY(Math.PI / 3);
+//     scene.add(object);
+//   });
 
-  loader.load("./island.fbx", function (object) {
-    object.scale.multiplyScalar(0.12);
-    object.position.set(-20, -0.05, -15);
-    object.rotateY(-Math.PI / 6);
-    scene.add(object);
-  });
-}
+//   loader.load("./island.fbx", function (object) {
+//     object.scale.multiplyScalar(0.12);
+//     object.position.set(-20, -0.05, -15);
+//     object.rotateY(-Math.PI / 6);
+//     scene.add(object);
+//   });
+// }
 
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
