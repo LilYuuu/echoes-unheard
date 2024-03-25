@@ -11,7 +11,10 @@ let scene, camera, renderer;
 
 let controls, water, sun;
 
-let islandAmei, islandBucika;
+let islands = [];
+let islandAmei, islandBucika, islandGerman;
+
+let mouse;
 
 // first create a loader
 // let loader = new FBXLoader();
@@ -61,6 +64,18 @@ async function init() {
   document.body.appendChild(renderer.domElement);
 
   controls = new OrbitControls(camera, renderer.domElement);
+
+  // add a raycast on click
+  mouse = new THREE.Vector2(0, 0);
+  document.addEventListener(
+    "mousemove",
+    (ev) => {
+      // three.js expects 'normalized device coordinates' (i.e. between -1 and 1 on both axes)
+      mouse.x = (ev.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(ev.clientY / window.innerHeight) * 2 + 1;
+    },
+    false
+  );
 
   // water
   const waterGeometry = new THREE.PlaneGeometry(10000, 10000);
@@ -135,12 +150,33 @@ async function init() {
   window.addEventListener("resize", onWindowResize);
 
   // islands
-  islandAmei = new Island(audioListener);
+  islandAmei = new Island(scene, audioListener, mouse, camera);
   // ensure the model is loaded before adding it to the scene, otherwise would raise errors
   await islandAmei.loadModel("./island.fbx");
   await islandAmei.loadAudio("./audio/amei.mp3");
+  islandAmei.setPosition(3, -0.08, -10);
+  islandAmei.setScale(1.7);
   islandAmei.playAudio();
   scene.add(islandAmei.mesh);
+  islands.push(islandAmei);
+
+  islandBucika = new Island(scene, audioListener, mouse, camera);
+  await islandBucika.loadModel("./island.fbx");
+  await islandBucika.loadAudio("./audio/bucika.mp3");
+  islandBucika.setPosition(5, -0.05, -2);
+  islandBucika.setRotation(0, Math.PI / 3, 0);
+  islandBucika.playAudio();
+  scene.add(islandBucika.mesh);
+  islands.push(islandBucika);
+
+  islandGerman = new Island(scene, audioListener, mouse, camera);
+  await islandGerman.loadModel("./island.fbx");
+  await islandGerman.loadAudio("./audio/german.mp3");
+  islandGerman.setPosition(-20, -0.05, -15);
+  islandGerman.setRotation(0, -Math.PI / 6, 0);
+  islandGerman.setScale(3);
+  scene.add(islandGerman.mesh);
+  islands.push(islandGerman);
 
   loop();
 }
@@ -184,6 +220,10 @@ function loop() {
   controls.update();
 
   water.material.uniforms["time"].value += 0.1 / 60.0;
+
+  for (let i = 0; i < islands.length; i++) {
+    islands[i].update();
+  }
 
   renderer.render(scene, camera);
 }

@@ -2,10 +2,21 @@ import * as THREE from "three";
 import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
 
 export class Island {
-  constructor(listener) {
+  constructor(scene, listener, mouse, camera) {
+    this.scene = scene;
+    this.listener = listener;
+    this.mouse = mouse;
+    this.camera = camera;
+
     this.mesh = null;
     this.sound = null;
-    this.listener = listener;
+
+    this.hover = false;
+    this.isActive = false;
+
+    window.addEventListener("click", (ev) => this.onClick(ev));
+
+    this.raycaster = new THREE.Raycaster();
   }
 
   async loadModel(path) {
@@ -46,9 +57,21 @@ export class Island {
     }
   }
 
+  setPosition(x, y, z) {
+    if (this.mesh) {
+      this.mesh.position.set(x, y, z);
+    }
+  }
+
   setRotation(x, y, z) {
     if (this.mesh) {
       this.mesh.rotation.set(x, y, z);
+    }
+  }
+
+  setScale(s) {
+    if (this.mesh) {
+      this.mesh.scale.multiplyScalar(s);
     }
   }
 
@@ -61,6 +84,37 @@ export class Island {
   stopAudio() {
     if (this.sound && this.sound.isPlaying) {
       this.sound.stop();
+    }
+  }
+
+  onClick() {
+    if (this.hover) {
+      console.log("clicked on object");
+      if (this.isActive) {
+        this.isActive = false;
+        console.log("turn inactive");
+      } else {
+        this.isActive = true;
+        console.log("turn active");
+        // TODO: show textbox
+      }
+    }
+  }
+
+  update() {
+    this.raycaster.setFromCamera(this.mouse, this.camera);
+
+    if (this.mesh) {
+      let interaction = this.raycaster.intersectObject(this.mesh);
+      if (interaction.length > 0) {
+        this.hover = true;
+        // this.mesh.scale.set(0.15, 0.15, 0.15);
+        // this.mesh.scale.multiplyScalar(0.15);
+      } else {
+        this.hover = false;
+        // this.mesh.scale.set(0.12, 0.12, 0.12);
+        // this.mesh.scale.multiplyScalar(0.12);
+      }
     }
   }
 }
