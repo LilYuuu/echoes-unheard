@@ -2,6 +2,14 @@ import * as THREE from "three";
 import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
 import { titleCards } from "./index.js";
 
+// import { OutlineEffect } from "three/examples/jsm/effects/OutlineEffect.js";
+
+// export const outlineEffect = new OutlineEffect(renderer, {
+//   defaultThickness: 0.01,
+//   defaultColor: [0, 0, 1],
+//   defaultAlpha: 0.8,
+// });
+
 export class Island {
   constructor(scene, listener, mouse, camera, name) {
     this.scene = scene;
@@ -122,7 +130,7 @@ export class Island {
       if (interaction.length > 0) {
         this.hover = true;
         // this.mesh.scale.set(0.15, 0.15, 0.15);
-        this.mesh.scale.multiplyScalar(1.1);
+        // this.mesh.scale.multiplyScalar(1.1);
       } else {
         this.hover = false;
         // this.mesh.scale.set(0.12, 0.12, 0.12);
