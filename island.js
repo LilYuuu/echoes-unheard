@@ -1,12 +1,14 @@
 import * as THREE from "three";
 import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
+import { titleCards } from "./index.js";
 
 export class Island {
-  constructor(scene, listener, mouse, camera) {
+  constructor(scene, listener, mouse, camera, name) {
     this.scene = scene;
     this.listener = listener;
     this.mouse = mouse;
     this.camera = camera;
+    this.name = name;
 
     this.mesh = null;
     this.sound = null;
@@ -90,6 +92,17 @@ export class Island {
   onClick() {
     if (this.hover) {
       console.log("clicked on object");
+      let card = document.getElementById(`title-card-${this.name}`);
+      // console.log(`title-card-${this.name}`);
+      // console.log(card);
+      // hide all the other cards if they are on
+      // console.log(titleCards);
+      for (let i = 0; i < titleCards.length; i++) {
+        if (titleCards[i].style.display != "none") {
+          titleCards[i].style.display = "none";
+        }
+      }
+      card.style.display = "block";
       if (this.isActive) {
         this.isActive = false;
         console.log("turn inactive");
@@ -109,11 +122,11 @@ export class Island {
       if (interaction.length > 0) {
         this.hover = true;
         // this.mesh.scale.set(0.15, 0.15, 0.15);
-        // this.mesh.scale.multiplyScalar(0.15);
+        this.mesh.scale.multiplyScalar(1.1);
       } else {
         this.hover = false;
         // this.mesh.scale.set(0.12, 0.12, 0.12);
-        // this.mesh.scale.multiplyScalar(0.12);
+        // this.mesh.scale.multiplyScalar(1.0);
       }
     }
   }

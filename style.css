@@ -8,14 +8,37 @@ body {
       line-height: 24px;
     /* position: relative; */
     color: white;
+    /* background-color: #c4d7f8; */
+    background-image: linear-gradient(180deg, #d5d1dd 5%, #a696b0, #d5d1dd);
   }
   
   canvas {
     display: block;
-    position:fixed; 
+    /* position:fixed;  */
     left:0; 
     top:0; 
     z-index:-1
+  }
+
+  .title-card-wrapper {
+    display: flex;
+    align-items: center;
+    /* height: 100%; */
+    /* width: 10%; */
+
+  }
+
+  .title-card {
+    display: none;
+    position: absolute;
+    top: 50%;
+    right: 5%;
+    transform: translate(0%, -50%);
+    z-index: 1; 
+    animation: fadeInAnimation;
+    animation-duration: 1.5s;
+    animation-iteration-count: 1; 
+    animation-fill-mode: forwards;
   }
   
   #blocker {
@@ -41,17 +64,16 @@ body {
 
   .card {
     display: none;
-    font-Size: 2.1vh;
+    /* font-Size: 2.1vh;
     width: 40%;
     padding: 8vh;
     margin: 0 auto;
     line-height: 4vh;
-    /* border: 2px solid rgba(0, 0, 0, 0.3); */
+
     border-radius: 24px;
     background-color: rgba(255, 255, 255, 0.3);
     color: white;
-    /* position: absolute; */
-    /* top: 50vh; */
+
     position: absolute;
     top: 50%;
     left: 50%;
@@ -60,7 +82,7 @@ body {
     animation: fadeInAnimation;
     animation-duration: 2s;
     animation-iteration-count: 1; 
-    animation-fill-mode: forwards; 
+    animation-fill-mode: forwards;  */
   }
 
   @keyframes fadeInAnimation {
