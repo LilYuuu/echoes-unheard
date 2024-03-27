@@ -15,11 +15,13 @@ body {
   canvas {
     display: block;
     /* position:fixed;  */
-    left:0; 
-    top:0; 
-    z-index:-1
+    left: 0; 
+    top: 0; 
+    z-index: -1;
   }
 
+
+  /***** TITLE CARD *****/
   .title-card-wrapper {
     display: flex;
     align-items: center;
@@ -48,7 +50,6 @@ body {
     height: 100%;
   }
 
-  /* .title-card-icon { */
   .title-card .icon-wrapper img {
     position: absolute;
     height: auto;
@@ -70,14 +71,15 @@ body {
     cursor: pointer;
   }
 
-  .title-card .icon-x-wrapper {
+  .icon-x-wrapper {
     width: 40px;
     height: 40px;
     top: 40px;
     right: 40px;
+    z-index: 1000;
   }
 
-  .title-card .icon-x-wrapper img {
+  .icon-x-wrapper img {
     width: 20px;
     
     /* transform: translate(-50%, -50%);  */
@@ -103,6 +105,76 @@ body {
     opacity: 0;
   }
   
+
+  /****** JOURNAL ******/
+  .content-wrapper {
+    display: flex;
+    align-items: center;
+    /* justify-content: center;
+    height: 100vh; */
+    /* position: relative; */
+  }
+
+  .journal {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1200px;
+    height: 800px;
+    z-index: 1;
+    /* border-radius: 40px; */
+    transition: 0.3s;
+  }
+
+  .journal-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 40px;
+    /* z-index: 10; */
+    
+  }
+
+  .journal-dots-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* border: 1px solid black; */
+    width: 100%;
+    height: 100%;
+    /* z-index: 100; */
+  }
+
+  .journal-dots {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    transition: 0.3s;
+    /* z-index: 1000; */
+  }
+
+  .journal-dots:hover {
+    width: 22px;
+    height: 22px;
+    background-color: white;
+  }
+
+  .journal-translation {
+    display: none;
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: black;
+    font-size: 16px;
+    border-radius: 20px;
+    padding: 32px;
+    width: 200px;
+    transition: display 0.3s ease;
+    z-index: 100;
+  }
+
   #blocker {
     position: absolute;
     width: 100%;

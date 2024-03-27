@@ -1,8 +1,9 @@
 // code reference for ocean & sky: https://github.com/mrdoob/three.js/blob/master/examples/webgl_shaders_ocean.html
 
 import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+// import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
+import { FirstPersonControls } from "three/addons/controls/FirstPersonControls.js";
 
 import { Water } from "three/addons/objects/Water.js";
 import { Sky } from "three/addons/objects/Sky.js";
@@ -12,6 +13,7 @@ import { Island } from "./island.js";
 let scene, camera, renderer;
 
 let controls, water, sun;
+let clock = new THREE.Clock();
 
 let islands = [];
 let islandAmei, islandBucika, islandGerman;
@@ -70,7 +72,13 @@ async function init() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  controls = new OrbitControls(camera, renderer.domElement);
+  // controls = new OrbitControls(camera, renderer.domElement);
+  controls = new FirstPersonControls(camera, renderer.domElement);
+  controls.movementSpeed = 5;
+  controls.lookSpeed = 0.01;
+
+  controls.noFly = true;
+  // controls.lookVertical = false;
 
   // add a raycast on click
   mouse = new THREE.Vector2(0, 0);
@@ -224,7 +232,7 @@ function onWindowResize() {
 function loop() {
   window.requestAnimationFrame(loop); // pass the name of your loop function into this function
 
-  controls.update();
+  controls.update(clock.getDelta());
 
   water.material.uniforms["time"].value += 0.1 / 60.0;
 

@@ -1,3 +1,10 @@
+// get mouse pos
+let mouseX, mouseY;
+window.addEventListener("mousemove", (ev) => {
+  mouseX = ev.clientX;
+  mouseY = ev.clientY;
+});
+
 // click on x to hide cards
 let xButtons = document.getElementsByClassName("icon-x-wrapper");
 // console.log(xButtons);
@@ -25,6 +32,7 @@ for (let i = 0; i < xButtons.length; i++) {
 }
 
 // hover to update book icon
+
 document
   .querySelector(".icon-book-wrapper")
   .addEventListener("mouseenter", function () {
@@ -38,3 +46,26 @@ document
     this.querySelector(".icon-book").style.opacity = 1;
     this.querySelector(".icon-book-filled").style.opacity = 0;
   });
+
+document.querySelector(".icon-book-wrapper").addEventListener("click", () => {
+  document.querySelector(".journal").style.display = "block";
+});
+
+// hover to show translate
+// console.log(document.querySelector(".journal-dots"));
+let journalDots = document.getElementsByClassName("journal-dots");
+
+for (let i = 0; i < journalDots.length; i++) {
+  let thisDot = journalDots[i];
+  thisDot.addEventListener("mouseenter", () => {
+    console.log("show translation");
+    let translationCard = document.querySelector(".journal-translation");
+    translationCard.style.display = "inline-block";
+    translationCard.style.left = mouseX + "px";
+    translationCard.style.top = mouseY + "px";
+  });
+  thisDot.addEventListener("mouseleave", () => {
+    console.log("hide translation");
+    document.querySelector(".journal-translation").style.display = "none";
+  });
+}
