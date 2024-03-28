@@ -32,24 +32,25 @@ for (let i = 0; i < xButtons.length; i++) {
 }
 
 // hover to update book icon
+let bookIconWrappers = document.getElementsByClassName("icon-book-wrapper");
 
-document
-  .querySelector(".icon-book-wrapper")
-  .addEventListener("mouseenter", function () {
+for (let i = 0; i < bookIconWrappers.length; i++) {
+  let thisBookIconWrapper = bookIconWrappers[i];
+
+  thisBookIconWrapper.addEventListener("mouseenter", function () {
     this.querySelector(".icon-book").style.opacity = 0;
     this.querySelector(".icon-book-filled").style.opacity = 1;
   });
 
-document
-  .querySelector(".icon-book-wrapper")
-  .addEventListener("mouseleave", function () {
+  thisBookIconWrapper.addEventListener("mouseleave", function () {
     this.querySelector(".icon-book").style.opacity = 1;
     this.querySelector(".icon-book-filled").style.opacity = 0;
   });
 
-document.querySelector(".icon-book-wrapper").addEventListener("click", () => {
-  document.querySelector(".journal").style.display = "block";
-});
+  thisBookIconWrapper.addEventListener("click", () => {
+    document.querySelector(".journal").style.display = "block";
+  });
+}
 
 // hover to show translate
 // console.log(document.querySelector(".journal-dots"));
