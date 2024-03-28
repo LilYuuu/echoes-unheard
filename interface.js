@@ -54,19 +54,22 @@ for (let i = 0; i < bookIconWrappers.length; i++) {
 
 // hover to show translate
 // console.log(document.querySelector(".journal-dots"));
-let journalDots = document.getElementsByClassName("journal-dots");
+let journalDotsBucika = document.getElementsByClassName("journal-dots bucika");
+// console.log(journalDotsBucika);
 
-for (let i = 0; i < journalDots.length; i++) {
-  let thisDot = journalDots[i];
+for (let i = 0; i < journalDotsBucika.length; i++) {
+  let thisDot = journalDotsBucika[i];
   thisDot.addEventListener("mouseenter", () => {
-    console.log("show translation");
+    // console.log("show translation");
     let translationCard = document.querySelector(".journal-translation");
+    // console.log(journalEntries.bucika[i]);
+    translationCard.innerHTML = journalEntries.bucika[i];
     translationCard.style.display = "inline-block";
     translationCard.style.left = mouseX + "px";
     translationCard.style.top = mouseY + "px";
   });
   thisDot.addEventListener("mouseleave", () => {
-    console.log("hide translation");
+    // console.log("hide translation");
     document.querySelector(".journal-translation").style.display = "none";
   });
 }
