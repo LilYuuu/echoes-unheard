@@ -64,12 +64,19 @@ for (let i = 0; i < journalDotsBucika.length; i++) {
     let translationCard = document.querySelector(".journal-translation");
     // console.log(journalEntries.bucika[i]);
     translationCard.innerHTML = journalEntries.bucika[i];
-    translationCard.style.display = "inline-block";
+    // translationCard.style.position = "absolute";
+    translationCard.style.visibility = "visible";
+    translationCard.style.opacity = 1;
     translationCard.style.left = mouseX + "px";
     translationCard.style.top = mouseY + "px";
   });
   thisDot.addEventListener("mouseleave", () => {
     // console.log("hide translation");
-    document.querySelector(".journal-translation").style.display = "none";
+    let translationCard = document.querySelector(".journal-translation");
+    // translationCard.style.position = "float";
+    translationCard.style.visibility = "hidden";
+    // translationCard.style.left = "0px";
+    // translationCard.style.top = "0px";
+    translationCard.style.opacity = 0;
   });
 }
