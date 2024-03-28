@@ -190,6 +190,7 @@ async function init() {
   islandGerman.setPosition(-20, -0.05, -15);
   islandGerman.setRotation(0, -Math.PI / 6, 0);
   islandGerman.setScale(3);
+  islandGerman.playAudio();
   scene.add(islandGerman.mesh);
   islands.push(islandGerman);
 
