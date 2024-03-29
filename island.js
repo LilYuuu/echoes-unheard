@@ -127,12 +127,18 @@ export class Island {
 
     if (this.mesh) {
       let interaction = this.raycaster.intersectObject(this.mesh);
+
       if (interaction.length > 0) {
         this.hover = true;
+        // console.log(interaction);
+        // console.log("hover");
+        // document.querySelector("canvas").style.cursor = "pointer";
         // this.mesh.scale.set(0.15, 0.15, 0.15);
         // this.mesh.scale.multiplyScalar(1.1);
       } else {
         this.hover = false;
+
+        // document.querySelector("canvas").style.cursor = "auto";
         // this.mesh.scale.set(0.12, 0.12, 0.12);
         // this.mesh.scale.multiplyScalar(1.0);
       }

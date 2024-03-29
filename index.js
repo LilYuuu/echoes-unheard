@@ -19,6 +19,7 @@ let islands = [];
 let islandAmei, islandBucika, islandGerman;
 
 let mouse;
+let pointerOn = false;
 
 export let titleCards = document.getElementsByClassName("title-card");
 
@@ -238,7 +239,24 @@ function loop() {
   water.material.uniforms["time"].value += 0.1 / 60.0;
 
   for (let i = 0; i < islands.length; i++) {
-    islands[i].update();
+    let thisIsland = islands[i];
+    thisIsland.update();
+    if (thisIsland.hover) {
+      // console.log(thisIsland.name);
+      pointerOn = true;
+      console.log("hovering on: " + thisIsland.name);
+      break;
+    } else {
+      pointerOn = false;
+    }
+  }
+
+  console.log(pointerOn);
+
+  if (pointerOn) {
+    document.querySelector("canvas").style.cursor = "pointer";
+  } else {
+    document.querySelector("canvas").style.cursor = "auto";
   }
 
   renderer.render(scene, camera);
