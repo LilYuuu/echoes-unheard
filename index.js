@@ -102,7 +102,7 @@ async function init() {
   camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
   camera.position.z = 5; // place the camera in space
   camera.position.y = 1.5;
-  camera.lookAt(0, 1, 0);
+  camera.lookAt(0, 1.5, 0);
 
   // scene.add(camera);
 
@@ -119,7 +119,7 @@ async function init() {
   controls.lookSpeed = 0.01;
 
   controls.noFly = true;
-  // controls.lookVertical = false;
+  controls.lookVertical = false;
 
   // add a raycast on click
   mouse = new THREE.Vector2(0, 0);
