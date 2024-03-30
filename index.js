@@ -2,7 +2,8 @@
 
 import * as THREE from "three";
 // import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
+// import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { FirstPersonControls } from "three/addons/controls/FirstPersonControls.js";
 
 import { Water } from "three/addons/objects/Water.js";
@@ -20,6 +21,43 @@ let islandAmei, islandBucika, islandGerman;
 
 let mouse;
 let pointerOn = false;
+
+// let GLTFLoader = new GLTFLoader();
+let boat;
+
+// async function loadBoat() {
+//   try {
+//     const model = await new Promise((resolve, reject) => {
+//       loader.load("boat_lowpoly.glb", resolve, undefined, reject);
+//     });
+
+//     boat = model.children[0]; // Assuming the model has a single mesh
+
+//     // Scaling the model
+//     // this.mesh.scale.multiplyScalar(0.12);
+//   } catch (error) {
+//     console.error("An error occurred while loading the model:", error);
+//   }
+// }
+
+function loadModel() {
+  // first create a loader
+  let gltfLoader = new GLTFLoader();
+
+  // then load the file and add it to your scene
+  gltfLoader.load("./boat_lowpoly.glb", function (gltf) {
+    let boat = gltf.scene;
+
+    scene.add(camera);
+    camera.add(boat);
+
+    boat.scale.set(0.007, 0.007, 0.007);
+    // boat.position.set(0.5, -0.3, 4.5);
+    boat.position.set(0.5, -2, -1);
+    boat.rotation.y = Math.PI;
+    boat.rotation.x = Math.PI / 10;
+  });
+}
 
 export let titleCards = document.getElementsByClassName("title-card");
 
@@ -63,8 +101,10 @@ async function init() {
   let aspect = window.innerWidth / window.innerHeight;
   camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
   camera.position.z = 5; // place the camera in space
-  camera.position.y = 2;
+  camera.position.y = 1.5;
   camera.lookAt(0, 1, 0);
+
+  // scene.add(camera);
 
   audioListener = new THREE.AudioListener();
   camera.add(audioListener);
@@ -195,6 +235,9 @@ async function init() {
   scene.add(islandGerman.mesh);
   islands.push(islandGerman);
 
+  // boat
+  loadModel();
+
   loop();
 }
 
@@ -244,14 +287,14 @@ function loop() {
     if (thisIsland.hover) {
       // console.log(thisIsland.name);
       pointerOn = true;
-      console.log("hovering on: " + thisIsland.name);
+      // console.log("hovering on: " + thisIsland.name);
       break;
     } else {
       pointerOn = false;
     }
   }
 
-  console.log(pointerOn);
+  // console.log(pointerOn);
 
   if (pointerOn) {
     document.querySelector("canvas").style.cursor = "pointer";
