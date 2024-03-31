@@ -22,72 +22,125 @@ let islandAmei, islandBucika, islandGerman;
 let mouse;
 let pointerOn = false;
 
-// let GLTFLoader = new GLTFLoader();
-let boat;
+// first create a loader
+let gltfLoader = new GLTFLoader();
 
-// async function loadBoat() {
-//   try {
-//     const model = await new Promise((resolve, reject) => {
-//       loader.load("boat_lowpoly.glb", resolve, undefined, reject);
-//     });
-
-//     boat = model.children[0]; // Assuming the model has a single mesh
-
-//     // Scaling the model
-//     // this.mesh.scale.multiplyScalar(0.12);
-//   } catch (error) {
-//     console.error("An error occurred while loading the model:", error);
-//   }
-// }
-
-function loadModel() {
-  // first create a loader
-  let gltfLoader = new GLTFLoader();
-
+function loadBoat() {
   // then load the file and add it to your scene
-  gltfLoader.load("./boat_lowpoly.glb", function (gltf) {
+
+  // "fishing_boat"
+  gltfLoader.load("./boat.glb", function (gltf) {
     let boat = gltf.scene;
 
-    scene.add(camera);
+    // scene.add(camera);
     camera.add(boat);
 
-    boat.scale.set(0.007, 0.007, 0.007);
-    // boat.position.set(0.5, -0.3, 4.5);
-    boat.position.set(0.5, -2, -1);
+    // boat.scale.set(0.9, 0.9, 0.9);
+    boat.position.set(0, -0.5, -1);
     boat.rotation.y = Math.PI;
-    boat.rotation.x = Math.PI / 10;
+    boat.rotation.x = Math.PI / 30;
+  });
+}
+
+function loadLeaf01() {
+  gltfLoader.load("./leaf01.glb", function (gltf) {
+    let leaf = gltf.scene;
+    scene.add(leaf);
+    leaf.scale.set(0.1, 0.1, 0.1);
+    leaf.position.set(-20, -0.01, -9.7);
+
+    let leaf2 = leaf.clone();
+    scene.add(leaf2);
+    leaf2.scale.set(0.13, 0.13, 0.13);
+    leaf2.position.set(-21.5, 0, -9.2);
+    leaf2.rotation.y = Math.PI / 2;
+
+    let leaf3 = leaf.clone();
+    scene.add(leaf3);
+    leaf3.scale.set(0.09, 0.09, 0.09);
+    leaf3.position.set(-20, 0.01, -10.5);
+    leaf3.rotation.y = Math.PI / 3;
+
+    let leaf4 = leaf.clone();
+    scene.add(leaf4);
+    leaf4.scale.set(0.07, 0.07, 0.07);
+    leaf4.position.set(-22, 0.01, -10.5);
+    leaf4.rotation.y = Math.PI / 6;
+  });
+}
+
+function loadLeaf02() {
+  gltfLoader.load("./leaf02.glb", function (gltf) {
+    let leaf = gltf.scene;
+    scene.add(leaf);
+    leaf.scale.set(0.1, 0.1, 0.1);
+    leaf.position.set(-21, 0, -11);
+
+    let leaf2 = leaf.clone();
+    scene.add(leaf2);
+    leaf2.scale.set(0.11, 0.11, 0.11);
+    leaf2.position.set(-21.5, 0, -11);
+    leaf2.rotation.y = Math.PI / 3;
+
+    let leaf3 = leaf.clone();
+    scene.add(leaf3);
+    leaf3.scale.set(0.11, 0.11, 0.11);
+    leaf3.position.set(-20.5, 0, -9);
+    leaf3.rotation.y = Math.PI / 3;
+
+    let leaf4 = leaf.clone();
+    scene.add(leaf4);
+    leaf4.scale.set(0.1, 0.1, 0.1);
+    leaf4.position.set(-20.7, 0, -10.2);
+    leaf4.rotation.y = Math.PI / 3;
+  });
+}
+
+function loadWaterlily() {
+  gltfLoader.load("./waterlily.glb", function (gltf) {
+    let waterlily = gltf.scene;
+    scene.add(waterlily);
+    waterlily.scale.set(0.1, 0.1, 0.1);
+    waterlily.position.set(-21.2, 0, -9.8);
+
+    let waterlily2 = waterlily.clone();
+    scene.add(waterlily2);
+    waterlily2.scale.set(0.09, 0.09, 0.09);
+    waterlily2.position.set(-20.5, 0, -10.5);
+    waterlily2.rotation.y = Math.PI / 3;
+  });
+}
+
+function loadGrass01() {
+  gltfLoader.load("./grass03.glb", function (gltf) {
+    let grass = gltf.scene;
+    scene.add(grass);
+    grass.scale.set(0.01, 0.01, 0.01);
+    grass.position.set(-20, -0.1, -12);
+
+    let grass2 = grass.clone();
+    scene.add(grass2);
+    grass2.scale.set(0.02, 0.02, 0.02);
+    grass2.position.set(-25, -0.1, -21);
+    grass2.rotation.y = Math.PI / 3;
+  });
+}
+
+function loadStone() {
+  gltfLoader.load("./stone.glb", function (gltf) {
+    let stone = gltf.scene;
+    scene.add(stone);
+    stone.position.set(-22, -0.1, -13);
+
+    let stone2 = stone.clone();
+    scene.add(stone2);
+    stone2.scale.set(3, 1, 1);
+    stone2.position.set(-23.5, -0.5, -9);
+    stone2.rotation.y = Math.PI / 4;
   });
 }
 
 export let titleCards = document.getElementsByClassName("title-card");
-
-// first create a loader
-// let loader = new FBXLoader();
-
-// Function that returns a promise which resolves with the loaded model
-// function loadModel(url) {
-//   return new Promise((resolve, reject) => {
-//     loader.load(url, (model) => resolve(model), undefined, reject);
-//   });
-// }
-
-// Function to clone the mesh
-// function cloneMesh(originalMesh) {
-//   const clonedGeometry = originalMesh.geometry.clone();
-//   //   const clonedMaterial = originalMesh.material.clone();
-//   let clonedMaterial;
-
-//   if (Array.isArray(originalMesh.material)) {
-//     // Clone each material in the array
-//     clonedMaterial = originalMesh.material.map((material) => material.clone());
-//   } else {
-//     // Clone the single material
-//     clonedMaterial = originalMesh.material.clone();
-//   }
-
-//   const clonedMesh = new THREE.Mesh(clonedGeometry, clonedMaterial);
-//   return clonedMesh;
-// }
 
 // spatial audio
 let audioListener;
@@ -101,7 +154,9 @@ async function init() {
   let aspect = window.innerWidth / window.innerHeight;
   camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
   camera.position.z = 5; // place the camera in space
-  camera.position.y = 1.5;
+  // camera.position.y = 1.5;
+
+  camera.position.y = 3; // for dev and testing
   camera.lookAt(0, 1.5, 0);
 
   // scene.add(camera);
@@ -119,7 +174,7 @@ async function init() {
   controls.lookSpeed = 0.01;
 
   controls.noFly = true;
-  controls.lookVertical = false;
+  // controls.lookVertical = false;
 
   // add a raycast on click
   mouse = new THREE.Vector2(0, 0);
@@ -200,8 +255,8 @@ async function init() {
   // updateSun();
 
   // add some lights so we can see our model
-  scene.add(new THREE.AmbientLight(0xffffff, 1));
-  scene.add(new THREE.DirectionalLight(0xffffff, 5));
+  scene.add(new THREE.AmbientLight(0xffffff, 3));
+  scene.add(new THREE.DirectionalLight(0xffffff, 1));
 
   window.addEventListener("resize", onWindowResize);
 
@@ -210,8 +265,8 @@ async function init() {
   // ensure the model is loaded before adding it to the scene, otherwise would raise errors
   await islandAmei.loadModel("./island.fbx");
   await islandAmei.loadAudio("./audio/amei.mp3");
-  islandAmei.setPosition(3, -0.08, -10);
-  islandAmei.setScale(1.7);
+  islandAmei.setPosition(30, -0.08, -15);
+  islandAmei.setScale(3);
   islandAmei.playAudio();
   scene.add(islandAmei.mesh);
   islands.push(islandAmei);
@@ -219,8 +274,9 @@ async function init() {
   islandBucika = new Island(scene, audioListener, mouse, camera, "bucika");
   await islandBucika.loadModel("./island.fbx");
   await islandBucika.loadAudio("./audio/bucika.mp3");
-  islandBucika.setPosition(5, -0.05, -2);
+  islandBucika.setPosition(3, -0.08, -30);
   islandBucika.setRotation(0, Math.PI / 3, 0);
+  islandBucika.setScale(3);
   islandBucika.playAudio();
   scene.add(islandBucika.mesh);
   islands.push(islandBucika);
@@ -228,7 +284,7 @@ async function init() {
   islandGerman = new Island(scene, audioListener, mouse, camera, "german");
   await islandGerman.loadModel("./island.fbx");
   await islandGerman.loadAudio("./audio/german.mp3");
-  islandGerman.setPosition(-20, -0.05, -15);
+  islandGerman.setPosition(-30, -0.08, -15);
   islandGerman.setRotation(0, -Math.PI / 6, 0);
   islandGerman.setScale(3);
   islandGerman.playAudio();
@@ -236,36 +292,17 @@ async function init() {
   islands.push(islandGerman);
 
   // boat
-  loadModel();
+  loadBoat();
+
+  // decorations
+  loadLeaf01();
+  loadLeaf02();
+  loadWaterlily();
+  loadGrass01();
+  loadStone();
 
   loop();
 }
-
-// function loadModel() {
-//     // first create a loader
-//     let loader = new FBXLoader();
-
-//   // then load the file and add it to your scene
-//   loader.load("./island.fbx", function (object) {
-//     object.scale.multiplyScalar(0.12);
-//     object.position.set(0, -0.05, 0);
-//     scene.add(object);
-//   });
-
-//   loader.load("./island.fbx", function (object) {
-//     object.scale.multiplyScalar(0.12);
-//     object.position.set(10, -0.05, -8);
-//     object.rotateY(Math.PI / 3);
-//     scene.add(object);
-//   });
-
-//   loader.load("./island.fbx", function (object) {
-//     object.scale.multiplyScalar(0.12);
-//     object.position.set(-20, -0.05, -15);
-//     object.rotateY(-Math.PI / 6);
-//     scene.add(object);
-//   });
-// }
 
 function onWindowResize() {
   camera.aspect = window.innerWidth / window.innerHeight;
