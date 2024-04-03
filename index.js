@@ -22,6 +22,8 @@ let islandAmei, islandBucika, islandGerman;
 let mouse;
 let pointerOn = false;
 
+let pointLight;
+
 // first create a loader
 let gltfLoader = new GLTFLoader();
 
@@ -32,13 +34,13 @@ function loadBoat() {
   gltfLoader.load("./boat.glb", function (gltf) {
     let boat = gltf.scene;
 
-    // scene.add(camera);
+    scene.add(camera);
     camera.add(boat);
 
     // boat.scale.set(0.9, 0.9, 0.9);
     boat.position.set(0, -0.5, -1);
     boat.rotation.y = Math.PI;
-    boat.rotation.x = Math.PI / 30;
+    // boat.rotation.x = Math.PI / 3;
   });
 }
 
@@ -148,18 +150,17 @@ let audioListener;
 async function init() {
   scene = new THREE.Scene();
 
-  // scene.background =
-  scene.fog = new THREE.FogExp2(0xc5bacb, 0.05);
+  scene.background = 0x000000;
+  // scene.fog = new THREE.FogExp2(0xc5bacb, 0.05);
+  scene.fog = new THREE.FogExp2(0x000000, 0.02);
 
   let aspect = window.innerWidth / window.innerHeight;
   camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
   camera.position.z = 5; // place the camera in space
-  // camera.position.y = 1.5;
+  camera.position.y = 1.5;
 
-  camera.position.y = 3; // for dev and testing
+  // camera.position.y = 3; // for dev and testing
   camera.lookAt(0, 1.5, 0);
-
-  // scene.add(camera);
 
   audioListener = new THREE.AudioListener();
   camera.add(audioListener);
@@ -174,7 +175,7 @@ async function init() {
   controls.lookSpeed = 0.01;
 
   controls.noFly = true;
-  // controls.lookVertical = false;
+  controls.lookVertical = false;
 
   // add a raycast on click
   mouse = new THREE.Vector2(0, 0);
@@ -208,6 +209,12 @@ async function init() {
 
   water.rotation.x = -Math.PI / 2;
   scene.add(water);
+
+  const geometry = new THREE.PlaneGeometry(10000, 10000);
+  const material = new THREE.MeshPhongMaterial({ color: 0x000000 });
+  const plane = new THREE.Mesh(geometry, material);
+  plane.rotation.x = -Math.PI / 2;
+  // scene.add(plane);
 
   // // sun
   // sun = new THREE.Vector3();
@@ -254,9 +261,26 @@ async function init() {
 
   // updateSun();
 
-  // add some lights so we can see our model
-  scene.add(new THREE.AmbientLight(0xffffff, 3));
-  scene.add(new THREE.DirectionalLight(0xffffff, 1));
+  // lights
+  scene.add(new THREE.AmbientLight(0xbbbbbb, 1));
+  // scene.add(new THREE.DirectionalLight(0xffffff, 1));
+
+  // pointLight = new THREE.PointLight(0xff0000, 1, 100);
+  // pointLight.position.set(0, 1, -5);
+  // scene.add(pointLight);
+  // camera.add(pointLight);
+
+  // const pointLightHelper = new THREE.PointLightHelper(pointLight, 1);
+  // scene.add(pointLightHelper);
+
+  const light = new THREE.PointLight(0x333300, 300, 1000000);
+  light.position.set(0, 2, -5);
+  camera.add(light);
+
+  const helper = new THREE.PointLightHelper(light);
+  scene.add(helper);
+
+  // camera.add(pointLight);
 
   window.addEventListener("resize", onWindowResize);
 
