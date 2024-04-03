@@ -31,7 +31,7 @@ function loadBoat() {
   // then load the file and add it to your scene
 
   // "fishing_boat"
-  gltfLoader.load("./boat.glb", function (gltf) {
+  gltfLoader.load("./models/boat.glb", function (gltf) {
     let boat = gltf.scene;
 
     scene.add(camera);
@@ -45,7 +45,7 @@ function loadBoat() {
 }
 
 function loadLeaf01() {
-  gltfLoader.load("./leaf01.glb", function (gltf) {
+  gltfLoader.load("./models/leaf01.glb", function (gltf) {
     let leaf = gltf.scene;
     scene.add(leaf);
     leaf.scale.set(0.1, 0.1, 0.1);
@@ -72,7 +72,7 @@ function loadLeaf01() {
 }
 
 function loadLeaf02() {
-  gltfLoader.load("./leaf02.glb", function (gltf) {
+  gltfLoader.load("./models/leaf02.glb", function (gltf) {
     let leaf = gltf.scene;
     scene.add(leaf);
     leaf.scale.set(0.1, 0.1, 0.1);
@@ -99,7 +99,7 @@ function loadLeaf02() {
 }
 
 function loadWaterlily() {
-  gltfLoader.load("./waterlily.glb", function (gltf) {
+  gltfLoader.load("./models/waterlily.glb", function (gltf) {
     let waterlily = gltf.scene;
     scene.add(waterlily);
     waterlily.scale.set(0.1, 0.1, 0.1);
@@ -114,7 +114,7 @@ function loadWaterlily() {
 }
 
 function loadGrass01() {
-  gltfLoader.load("./grass03.glb", function (gltf) {
+  gltfLoader.load("./models/grass03.glb", function (gltf) {
     let grass = gltf.scene;
     scene.add(grass);
     grass.scale.set(0.01, 0.01, 0.01);
@@ -129,7 +129,7 @@ function loadGrass01() {
 }
 
 function loadStone() {
-  gltfLoader.load("./stone.glb", function (gltf) {
+  gltfLoader.load("./models/stone.glb", function (gltf) {
     let stone = gltf.scene;
     scene.add(stone);
     stone.position.set(-22, -0.1, -13);
@@ -287,7 +287,7 @@ async function init() {
   // islands
   islandAmei = new Island(scene, audioListener, mouse, camera, "amei");
   // ensure the model is loaded before adding it to the scene, otherwise would raise errors
-  await islandAmei.loadModel("./island.fbx");
+  await islandAmei.loadModel("./models/island.fbx");
   await islandAmei.loadAudio("./audio/amei.mp3");
   islandAmei.setPosition(30, -0.08, -15);
   islandAmei.setScale(3);
@@ -296,7 +296,7 @@ async function init() {
   islands.push(islandAmei);
 
   islandBucika = new Island(scene, audioListener, mouse, camera, "bucika");
-  await islandBucika.loadModel("./island.fbx");
+  await islandBucika.loadModel("./models/island.fbx");
   await islandBucika.loadAudio("./audio/bucika.mp3");
   islandBucika.setPosition(3, -0.08, -30);
   islandBucika.setRotation(0, Math.PI / 3, 0);
@@ -306,7 +306,7 @@ async function init() {
   islands.push(islandBucika);
 
   islandGerman = new Island(scene, audioListener, mouse, camera, "german");
-  await islandGerman.loadModel("./island.fbx");
+  await islandGerman.loadModel("./models/island.fbx");
   await islandGerman.loadAudio("./audio/german.mp3");
   islandGerman.setPosition(-30, -0.08, -15);
   islandGerman.setRotation(0, -Math.PI / 6, 0);
