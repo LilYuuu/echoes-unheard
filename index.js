@@ -10,6 +10,9 @@ import { Water } from "three/addons/objects/Water.js";
 import { Sky } from "three/addons/objects/Sky.js";
 
 import { Island } from "./island.js";
+import { Boat } from "./boat.js";
+
+import { lerp } from "./utility.js";
 
 let scene, camera, renderer;
 
@@ -29,22 +32,22 @@ let pointLight;
 // first create a loader
 let gltfLoader = new GLTFLoader();
 
-function loadBoat() {
-  // then load the file and add it to your scene
+// function loadBoat() {
+//   // then load the file and add it to your scene
 
-  // "fishing_boat"
-  gltfLoader.load("./models/boat.glb", function (gltf) {
-    boat = gltf.scene;
+//   // "fishing_boat"
+//   gltfLoader.load("./models/boat.glb", function (gltf) {
+//     boat = gltf.scene;
 
-    scene.add(camera);
-    camera.add(boat);
+//     // scene.add(camera);
+//     camera.add(boat);
 
-    // boat.scale.set(0.9, 0.9, 0.9);
-    boat.position.set(0, -0.5, -1);
-    boat.rotation.y = Math.PI;
-    // boat.rotation.x = Math.PI / 3;
-  });
-}
+//     // boat.scale.set(0.9, 0.9, 0.9);
+//     boat.position.set(0, -0.5, -1);
+//     boat.rotation.y = Math.PI;
+//     // boat.rotation.x = Math.PI / 3;
+//   });
+// }
 
 function loadLeaf01() {
   gltfLoader.load("./models/leaf01.glb", function (gltf) {
@@ -173,6 +176,7 @@ function onDocumentKeyDown(event) {
   }
 }
 
+// TO BE FIXED
 // Add the event listener for the 'keydown' event
 document.addEventListener("keypressed", onDocumentKeyDown);
 
@@ -187,6 +191,8 @@ async function init() {
   camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
   camera.position.z = 5; // place the camera in space
   camera.position.y = 1.5;
+
+  scene.add(camera);
 
   // camera.position.y = 3; // for dev and testing
   camera.lookAt(0, 1.5, 0);
@@ -321,7 +327,6 @@ async function init() {
   islandAmei.setPosition(30, -0.08, -15);
   islandAmei.setScale(3);
   islandAmei.playAudio();
-  scene.add(islandAmei.mesh);
   islands.push(islandAmei);
 
   islandBucika = new Island(scene, audioListener, mouse, camera, "bucika");
@@ -331,7 +336,6 @@ async function init() {
   islandBucika.setRotation(0, Math.PI / 3, 0);
   islandBucika.setScale(3);
   islandBucika.playAudio();
-  scene.add(islandBucika.mesh);
   islands.push(islandBucika);
 
   islandGerman = new Island(scene, audioListener, mouse, camera, "german");
@@ -341,11 +345,12 @@ async function init() {
   islandGerman.setRotation(0, -Math.PI / 6, 0);
   islandGerman.setScale(3);
   islandGerman.playAudio();
-  scene.add(islandGerman.mesh);
   islands.push(islandGerman);
 
   // boat
-  loadBoat();
+  // loadBoat();
+  boat = new Boat(camera, clock);
+  boat.loadModel("./models/boat.glb");
 
   // decorations
   loadLeaf01();
@@ -364,30 +369,37 @@ function onWindowResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function lerp(start, end, amt) {
-  return (1 - amt) * start + amt * end;
-}
+// function lerp(start, end, amt) {
+//   return (1 - amt) * start + amt * end;
+// }
 
 function loop() {
   window.requestAnimationFrame(loop); // pass the name of your loop function into this function
 
   controls.update(clock.getDelta());
 
-  // boat floating effect
-  if (boat) {
-    // boat.rotation.x += 0.01; // for testing
-    // boat.rotation.x = Math.sin(clock.elapsedTime) * 0.04;
+  // console.log(boat.rotation);
+  // boat.float();
 
-    let startValRot = boat.rotation.x;
-    let endValRot =
-      perlin.get(clock.elapsedTime / 10, clock.elapsedTime / 2) * 0.1;
-    boat.rotation.x = lerp(startValRot, endValRot, 0.5);
-
-    let startValPosX = boat.position.x;
-    let endValPosX =
-      perlin.get((clock.elapsedTime + 100) / 10, clock.elapsedTime / 2) * 0.1;
-    boat.position.x = lerp(startValPosX, endValPosX, 0.5);
+  if (boat.mesh) {
+    boat.float();
   }
+
+  // // boat floating effect
+  // if (boat) {
+  //   // boat.rotation.x += 0.01; // for testing
+  //   // boat.rotation.x = Math.sin(clock.elapsedTime) * 0.04;
+
+  //   let startValRot = boat.rotation.x;
+  //   let endValRot =
+  //     perlin.get(clock.elapsedTime / 10, clock.elapsedTime / 2) * 0.1;
+  //   boat.rotation.x = lerp(startValRot, endValRot, 0.5);
+
+  //   let startValPosX = boat.position.x;
+  //   let endValPosX =
+  //     perlin.get((clock.elapsedTime + 100) / 10, clock.elapsedTime / 2) * 0.1;
+  //   boat.position.x = lerp(startValPosX, endValPosX, 0.5);
+  // }
 
   water.material.uniforms["time"].value += 0.1 / 60.0;
 

@@ -39,6 +39,7 @@ export class Island {
 
       this.mesh = model.children[0]; // Assuming the model has a single mesh
 
+      this.scene.add(this.mesh);
       // Scaling the model
       this.mesh.scale.multiplyScalar(0.12);
     } catch (error) {
