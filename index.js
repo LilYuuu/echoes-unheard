@@ -19,6 +19,8 @@ let clock = new THREE.Clock();
 let islands = [];
 let islandAmei, islandBucika, islandGerman;
 
+let boat;
+
 let mouse;
 let pointerOn = false;
 
@@ -32,7 +34,7 @@ function loadBoat() {
 
   // "fishing_boat"
   gltfLoader.load("./models/boat.glb", function (gltf) {
-    let boat = gltf.scene;
+    boat = gltf.scene;
 
     scene.add(camera);
     camera.add(boat);
@@ -146,6 +148,33 @@ export let titleCards = document.getElementsByClassName("title-card");
 
 // spatial audio
 let audioListener;
+
+const rotateSpeed = 0.01; // Adjust this value as needed
+
+function onDocumentKeyDown(event) {
+  // Get the key code of the pressed key
+  var keyCode = event.which;
+
+  // 'A' key
+  if (keyCode == 65) {
+    event.preventDefault();
+    event.stopPropagation();
+    controls.enabled = false;
+    camera.rotation.y += rotateSpeed;
+    console.log("A is pressed");
+  }
+  // 'D' key
+  if (keyCode == 68) {
+    event.preventDefault();
+    event.stopPropagation();
+    controls.enabled = false;
+    camera.rotation.y -= rotateSpeed;
+    console.log("D is pressed");
+  }
+}
+
+// Add the event listener for the 'keydown' event
+document.addEventListener("keypressed", onDocumentKeyDown);
 
 async function init() {
   scene = new THREE.Scene();
@@ -335,10 +364,30 @@ function onWindowResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
+function lerp(start, end, amt) {
+  return (1 - amt) * start + amt * end;
+}
+
 function loop() {
   window.requestAnimationFrame(loop); // pass the name of your loop function into this function
 
   controls.update(clock.getDelta());
+
+  // boat floating effect
+  if (boat) {
+    // boat.rotation.x += 0.01; // for testing
+    // boat.rotation.x = Math.sin(clock.elapsedTime) * 0.04;
+
+    let startValRot = boat.rotation.x;
+    let endValRot =
+      perlin.get(clock.elapsedTime / 10, clock.elapsedTime / 2) * 0.1;
+    boat.rotation.x = lerp(startValRot, endValRot, 0.5);
+
+    let startValPosX = boat.position.x;
+    let endValPosX =
+      perlin.get((clock.elapsedTime + 100) / 10, clock.elapsedTime / 2) * 0.1;
+    boat.position.x = lerp(startValPosX, endValPosX, 0.5);
+  }
 
   water.material.uniforms["time"].value += 0.1 / 60.0;
 
