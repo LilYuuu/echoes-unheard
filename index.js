@@ -349,7 +349,7 @@ async function init() {
 
   // boat
   // loadBoat();
-  boat = new Boat(camera, clock);
+  boat = new Boat(scene, camera, clock);
   boat.loadModel("./models/boat.glb");
 
   // decorations
@@ -358,6 +358,14 @@ async function init() {
   loadWaterlily();
   loadGrass01();
   loadStone();
+
+  // // test box for collision
+  // let geo = new THREE.BoxGeometry(1, 1, 1);
+  // let mat = new THREE.MeshBasicMaterial();
+  // let box = new THREE.Mesh(geo, mat);
+  // scene.add(box);
+  // box.position.set(0, 1, -5);
+  // // box.layers.enable(3);   // to set the object as collidable, need to align with the raycaster setting
 
   loop();
 }
@@ -382,7 +390,7 @@ function loop() {
   // boat.float();
 
   if (boat.mesh) {
-    boat.float();
+    boat.update();
   }
 
   // // boat floating effect
