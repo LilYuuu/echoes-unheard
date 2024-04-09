@@ -220,7 +220,7 @@ async function init() {
 
   // controls = new OrbitControls(camera, renderer.domElement);
   controls = new FirstPersonControls(camera, renderer.domElement);
-  controls.movementSpeed = 5;
+  controls.movementSpeed = 1;
   controls.lookSpeed = 0.01;
 
   controls.noFly = true;
@@ -334,7 +334,7 @@ async function init() {
   // const pointLightHelper = new THREE.PointLightHelper(pointLight, 1);
   // scene.add(pointLightHelper);
 
-  const light = new THREE.PointLight(0x666666, 1000, 1000000);
+  const light = new THREE.PointLight(0x666666, 2000, 1000000);
   light.position.set(0, 2, -10);
   camera.add(light);
 
