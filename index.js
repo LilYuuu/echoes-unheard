@@ -27,7 +27,21 @@ let boat;
 let mouse;
 let pointerOn = false;
 
-let pointLight;
+// let pointLight;
+
+let waterVideo = document.getElementById("water-video");
+let waterTexture = new THREE.VideoTexture(waterVideo);
+
+let waterColorVideo = document.getElementById("water-video-color");
+let waterTextureColor = new THREE.VideoTexture(waterColorVideo);
+
+waterTexture.wrapS = THREE.RepeatWrapping;
+waterTexture.wrapT = THREE.RepeatWrapping;
+waterTexture.repeat.set(10000 / 512, 10000 / 512);
+
+waterTextureColor.wrapS = THREE.RepeatWrapping;
+waterTextureColor.wrapT = THREE.RepeatWrapping;
+waterTextureColor.repeat.set(10000 / 4.5, 10000 / 4.5);
 
 // first create a loader
 let gltfLoader = new GLTFLoader();
@@ -243,13 +257,25 @@ async function init() {
   });
 
   water.rotation.x = -Math.PI / 2;
-  scene.add(water);
+  // scene.add(water);
 
   const geometry = new THREE.PlaneGeometry(10000, 10000);
-  const material = new THREE.MeshPhongMaterial({ color: 0x000000 });
+  const material = new THREE.MeshStandardMaterial({
+    color: 0x555555,
+    roughness: 0.0,
+    metalness: 0.5,
+    map: waterTextureColor,
+    // displacementMap: waterTexture,
+    // displacementScale: 1,
+  });
+  // const material = new THREE.MeshLambertMaterial({
+  //   color: 0xfff700,
+  //   // envMap: waterTexture,
+  //   refractionRatio: 0.95,
+  // });
   const plane = new THREE.Mesh(geometry, material);
   plane.rotation.x = -Math.PI / 2;
-  // scene.add(plane);
+  scene.add(plane);
 
   // // sun
   // sun = new THREE.Vector3();
@@ -308,8 +334,8 @@ async function init() {
   // const pointLightHelper = new THREE.PointLightHelper(pointLight, 1);
   // scene.add(pointLightHelper);
 
-  const light = new THREE.PointLight(0x333300, 300, 1000000);
-  light.position.set(0, 2, -5);
+  const light = new THREE.PointLight(0x666666, 1000, 1000000);
+  light.position.set(0, 2, -10);
   camera.add(light);
 
   const helper = new THREE.PointLightHelper(light);
