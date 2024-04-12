@@ -46,23 +46,6 @@ waterTextureColor.repeat.set(10000 / 4.5, 10000 / 4.5);
 // first create a loader
 let gltfLoader = new GLTFLoader();
 
-// function loadBoat() {
-//   // then load the file and add it to your scene
-
-//   // "fishing_boat"
-//   gltfLoader.load("./models/boat.glb", function (gltf) {
-//     boat = gltf.scene;
-
-//     // scene.add(camera);
-//     camera.add(boat);
-
-//     // boat.scale.set(0.9, 0.9, 0.9);
-//     boat.position.set(0, -0.5, -1);
-//     boat.rotation.y = Math.PI;
-//     // boat.rotation.x = Math.PI / 3;
-//   });
-// }
-
 function loadLeaf01() {
   gltfLoader.load("./models/leaf01.glb", function (gltf) {
     let leaf = gltf.scene;
@@ -339,7 +322,7 @@ async function init() {
   camera.add(light);
 
   const helper = new THREE.PointLightHelper(light);
-  scene.add(helper);
+  // scene.add(helper);
 
   // camera.add(pointLight);
 
