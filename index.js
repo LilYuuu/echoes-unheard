@@ -1,7 +1,7 @@
 // code reference for ocean & sky: https://github.com/mrdoob/three.js/blob/master/examples/webgl_shaders_ocean.html
 
 import * as THREE from "three";
-// import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 // import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { FirstPersonControls } from "three/addons/controls/FirstPersonControls.js";
@@ -48,6 +48,7 @@ let gltfLoader = new GLTFLoader();
 
 function loadLeaf01() {
   gltfLoader.load("./models/leaf01.glb", function (gltf) {
+    // for island on the left
     let leaf = gltf.scene;
     scene.add(leaf);
     leaf.scale.set(0.1, 0.1, 0.1);
@@ -70,11 +71,92 @@ function loadLeaf01() {
     leaf4.scale.set(0.07, 0.07, 0.07);
     leaf4.position.set(-22, 0.01, -10.5);
     leaf4.rotation.y = Math.PI / 6;
+
+    let leaf5 = leaf.clone();
+    scene.add(leaf5);
+    leaf5.scale.set(0.07, 0.07, 0.07);
+    leaf5.position.set(-19.7, 0.01, -15.3);
+    leaf5.rotation.y = Math.PI / 6;
+
+    let leaf6 = leaf.clone();
+    scene.add(leaf6);
+    leaf6.scale.set(0.1, 0.1, 0.1);
+    leaf6.position.set(-20.3, 0.01, -14.8);
+    leaf6.rotation.y = -Math.PI / 4;
+
+    let leaf7 = leaf.clone();
+    scene.add(leaf7);
+    leaf7.scale.set(0.08, 0.08, 0.08);
+    leaf7.position.set(-19.4, 0.01, -16.3);
+    leaf7.rotation.y = -Math.PI / 3;
+
+    // for island in the middle
+    let leaf8 = leaf.clone();
+    scene.add(leaf8);
+    leaf8.scale.set(0.13, 0.13, 0.13);
+    leaf8.position.set(3, 0, -20);
+    leaf8.rotation.y = Math.PI / 3;
+
+    let leaf9 = leaf.clone();
+    scene.add(leaf9);
+    leaf9.scale.set(0.09, 0.09, 0.09);
+    leaf9.position.set(0, 0, -22);
+    leaf9.rotation.y = -Math.PI / 3;
+
+    let leaf10 = leaf.clone();
+    scene.add(leaf10);
+    leaf10.scale.set(0.07, 0.07, 0.07);
+    leaf10.position.set(-1, 0, -18);
+    leaf10.rotation.y = Math.PI / 6;
+
+    let leaf11 = leaf.clone();
+    scene.add(leaf11);
+    leaf11.scale.set(0.07, 0.07, 0.07);
+    leaf11.position.set(0.7, 0, -20);
+    leaf11.rotation.y = Math.PI / 6;
+
+    let leaf12 = leaf.clone();
+    scene.add(leaf12);
+    leaf12.scale.set(0.07, 0.07, 0.07);
+    leaf12.position.set(7, 0, -20);
+    leaf12.rotation.y = Math.PI / 6;
+
+    let leaf13 = leaf.clone();
+    scene.add(leaf13);
+    leaf13.scale.set(0.08, 0.08, 0.08);
+    leaf13.position.set(7.4, 0, -21.1);
+    leaf13.rotation.y = (Math.PI / 3) * 2;
+
+    let leaf14 = leaf.clone();
+    scene.add(leaf14);
+    leaf14.scale.set(0.06, 0.06, 0.06);
+    leaf14.position.set(6.4, 0, -21.4);
+    leaf14.rotation.y = -(Math.PI / 4) * 3;
+
+    // for island on the right
+    let leaf15 = leaf.clone();
+    scene.add(leaf15);
+    leaf15.scale.set(0.06, 0.06, 0.06);
+    leaf15.position.set(20.1, 0, -16);
+    leaf15.rotation.y = -(Math.PI / 4) * 3;
+
+    let leaf16 = leaf.clone();
+    scene.add(leaf16);
+    leaf16.scale.set(0.07, 0.07, 0.07);
+    leaf16.position.set(20.7, 0, -15.4);
+    leaf16.rotation.y = (Math.PI / 3) * 2;
+
+    let leaf17 = leaf.clone();
+    scene.add(leaf17);
+    leaf17.scale.set(0.07, 0.07, 0.07);
+    leaf17.position.set(20, 0, -14);
+    leaf17.rotation.y = -(Math.PI / 3) * 2;
   });
 }
 
 function loadLeaf02() {
   gltfLoader.load("./models/leaf02.glb", function (gltf) {
+    // for island on the left
     let leaf = gltf.scene;
     scene.add(leaf);
     leaf.scale.set(0.1, 0.1, 0.1);
@@ -97,11 +179,56 @@ function loadLeaf02() {
     leaf4.scale.set(0.1, 0.1, 0.1);
     leaf4.position.set(-20.7, 0, -10.2);
     leaf4.rotation.y = Math.PI / 3;
+
+    // for island in the middle
+    let leaf5 = leaf.clone();
+    scene.add(leaf5);
+    leaf5.scale.set(0.11, 0.11, 0.11);
+    leaf5.position.set(0.2, 0, -19.5);
+    leaf5.rotation.y = Math.PI / 3;
+
+    let leaf6 = leaf.clone();
+    scene.add(leaf6);
+    leaf6.scale.set(0.11, 0.11, 0.11);
+    leaf6.position.set(0.5, 0, -21.5);
+    leaf6.rotation.y = -Math.PI / 2;
+
+    let leaf7 = leaf.clone();
+    scene.add(leaf7);
+    leaf7.scale.set(0.1, 0.1, 0.1);
+    leaf7.position.set(2.7, 0, -22);
+    leaf7.rotation.y = Math.PI / 3;
+
+    let leaf8 = leaf.clone();
+    scene.add(leaf8);
+    leaf8.scale.set(0.1, 0.1, 0.1);
+    leaf8.position.set(-1.6, 0, -19.6);
+    leaf8.rotation.y = Math.PI / 3;
+
+    // for island on the right
+    let leaf9 = leaf.clone();
+    scene.add(leaf9);
+    leaf9.scale.set(0.1, 0.1, 0.1);
+    leaf9.position.set(19.2, 0, -15.2);
+    leaf9.rotation.y = Math.PI / 3;
+
+    let leaf10 = leaf.clone();
+    scene.add(leaf10);
+    leaf10.scale.set(0.11, 0.11, 0.11);
+    leaf10.position.set(20.7, 0, -14);
+    leaf10.rotation.y = -Math.PI / 2;
+
+    let leaf11 = leaf.clone();
+    scene.add(leaf11);
+    leaf11.scale.set(0.1, 0.1, 0.1);
+    leaf11.position.set(19.6, 0, -12);
+    leaf11.rotation.y = Math.PI / 3;
   });
 }
 
 function loadWaterlily() {
   gltfLoader.load("./models/waterlily.glb", function (gltf) {
+    // for island on the left
     let waterlily = gltf.scene;
     scene.add(waterlily);
     waterlily.scale.set(0.1, 0.1, 0.1);
@@ -112,11 +239,91 @@ function loadWaterlily() {
     waterlily2.scale.set(0.09, 0.09, 0.09);
     waterlily2.position.set(-20.5, 0, -10.5);
     waterlily2.rotation.y = Math.PI / 3;
+
+    let waterlily3 = waterlily.clone();
+    scene.add(waterlily3);
+    waterlily3.scale.set(0.09, 0.09, 0.09);
+    waterlily3.position.set(-20, 0, -15.7);
+    waterlily3.rotation.y = Math.PI / 3;
+
+    // for island in the middle
+    let waterlily4 = gltf.scene;
+    scene.add(waterlily4);
+    waterlily4.scale.set(0.1, 0.1, 0.1);
+    waterlily4.position.set(0.5, 0, -20.5);
+
+    let waterlily5 = waterlily.clone();
+    scene.add(waterlily5);
+    waterlily5.scale.set(0.09, 0.09, 0.09);
+    waterlily5.position.set(-1, 0, -19);
+    waterlily5.rotation.y = Math.PI / 3;
+
+    let waterlily6 = waterlily.clone();
+    scene.add(waterlily6);
+    waterlily6.scale.set(0.06, 0.06, 0.06);
+    waterlily6.position.set(2, 0, -21);
+    waterlily6.rotation.y = Math.PI / 3;
+
+    let waterlily7 = waterlily.clone();
+    scene.add(waterlily7);
+    waterlily7.scale.set(0.1, 0.1, 0.1);
+    waterlily7.position.set(2.3, 0, -19.6);
+    waterlily7.rotation.y = Math.PI / 5;
+
+    let waterlily8 = waterlily.clone();
+    scene.add(waterlily8);
+    waterlily8.scale.set(0.1, 0.1, 0.1);
+    waterlily8.position.set(5, 0, -19.6);
+    waterlily8.rotation.y = Math.PI / 5;
+
+    let waterlily9 = waterlily.clone();
+    scene.add(waterlily9);
+    waterlily9.scale.set(0.08, 0.08, 0.08);
+    waterlily9.position.set(7, 0, -21.3);
+    waterlily9.rotation.y = Math.PI / 5;
+
+    let waterlily10 = waterlily.clone();
+    scene.add(waterlily10);
+    waterlily10.scale.set(0.09, 0.09, 0.09);
+    waterlily10.position.set(7.8, 0, -22.3);
+    waterlily10.rotation.y = Math.PI / 5;
+
+    // for island on the right
+    let waterlily11 = waterlily.clone();
+    scene.add(waterlily11);
+    waterlily11.scale.set(0.09, 0.09, 0.09);
+    waterlily11.position.set(20, -0.08, -15);
+    waterlily11.rotation.y = Math.PI / 3;
+
+    let waterlily12 = waterlily.clone();
+    scene.add(waterlily12);
+    waterlily12.scale.set(0.06, 0.06, 0.06);
+    waterlily12.position.set(20.5, -0.03, -14.5);
+    waterlily12.rotation.y = Math.PI / 3;
+
+    let waterlily13 = waterlily.clone();
+    scene.add(waterlily13);
+    waterlily13.scale.set(0.1, 0.1, 0.1);
+    waterlily13.position.set(20, -0.08, -11.7);
+    waterlily13.rotation.y = (Math.PI / 5) * 4;
+
+    let waterlily14 = waterlily.clone();
+    scene.add(waterlily14);
+    waterlily14.scale.set(0.1, 0.1, 0.1);
+    waterlily14.position.set(22, -0.08, -9.3);
+    waterlily14.rotation.y = -Math.PI / 5;
+
+    let waterlily15 = waterlily.clone();
+    scene.add(waterlily15);
+    waterlily15.scale.set(0.1, 0.1, 0.1);
+    waterlily15.position.set(22, -0.08, -18);
+    waterlily15.rotation.y = Math.PI / 5;
   });
 }
 
 function loadGrass01() {
   gltfLoader.load("./models/grass03.glb", function (gltf) {
+    // for island on the left
     let grass = gltf.scene;
     scene.add(grass);
     grass.scale.set(0.01, 0.01, 0.01);
@@ -127,11 +334,62 @@ function loadGrass01() {
     grass2.scale.set(0.02, 0.02, 0.02);
     grass2.position.set(-25, -0.1, -21);
     grass2.rotation.y = Math.PI / 3;
+
+    let grass3 = grass.clone();
+    scene.add(grass3);
+    grass3.scale.set(0.02, 0.02, 0.02);
+    grass3.position.set(-21, 0, -18);
+    grass3.rotation.y = Math.PI / 4;
+
+    // for island in the middle
+    let grass4 = grass.clone();
+    scene.add(grass4);
+    grass4.scale.set(0.013, 0.013, 0.013);
+    grass4.position.set(-2, 0, -22);
+    grass4.rotation.y = Math.PI / 3;
+
+    let grass5 = grass.clone();
+    scene.add(grass5);
+    grass5.scale.set(0.02, 0.02, 0.02);
+    grass5.position.set(-4, 0, -30);
+    grass5.rotation.y = Math.PI / 4;
+
+    let grass6 = grass.clone();
+    scene.add(grass6);
+    grass6.scale.set(0.013, 0.013, 0.013);
+    grass6.position.set(5, 0, -30);
+    grass6.rotation.y = Math.PI / 4;
+
+    let grass7 = grass.clone();
+    scene.add(grass7);
+    grass7.scale.set(0.02, 0.02, 0.02);
+    grass7.position.set(8.5, 0, -24.4);
+    grass7.rotation.y = Math.PI / 4;
+
+    // for island on the right
+    let grass8 = grass.clone();
+    scene.add(grass8);
+    grass8.scale.set(0.019, 0.019, 0.019);
+    grass8.position.set(23.8, -0.08, -19.3);
+    grass8.rotation.y = Math.PI / 4;
+
+    let grass9 = grass.clone();
+    scene.add(grass9);
+    grass9.scale.set(0.019, 0.019, 0.019);
+    grass9.position.set(22, -0.08, -13);
+    grass9.rotation.y = Math.PI / 4;
+
+    let grass10 = grass.clone();
+    scene.add(grass10);
+    grass10.scale.set(0.011, 0.011, 0.011);
+    grass10.position.set(22.8, -0.08, -9);
+    grass10.rotation.y = Math.PI / 4;
   });
 }
 
 function loadStone() {
   gltfLoader.load("./models/stone.glb", function (gltf) {
+    // for island on the left
     let stone = gltf.scene;
     scene.add(stone);
     stone.position.set(-22, -0.1, -13);
@@ -141,6 +399,38 @@ function loadStone() {
     stone2.scale.set(3, 1, 1);
     stone2.position.set(-23.5, -0.5, -9);
     stone2.rotation.y = Math.PI / 4;
+
+    let stone3 = stone.clone();
+    scene.add(stone3);
+    stone3.scale.set(0.5, 0.5, 0.5);
+    stone3.position.set(-21, 0, -19);
+    stone3.rotation.y = Math.PI / 4;
+
+    // for island in the middle
+    let stone4 = stone.clone();
+    scene.add(stone4);
+    stone4.scale.set(0.5, 0.5, 0.5);
+    stone4.position.set(1.6, -0.2, -23);
+    stone4.rotation.y = Math.PI / 4;
+
+    let stone5 = stone.clone();
+    scene.add(stone5);
+    // stone5.scale.set(0.3, 0.5, 1);
+    stone5.position.set(-3, -0.2, -24);
+    // stone5.rotation.y = Math.PI / 4;
+
+    // for island on the right
+    let stone6 = stone.clone();
+    scene.add(stone6);
+    stone6.scale.set(0.5, 0.5, 0.5);
+    stone6.position.set(22.8, -0.08, -7);
+    stone6.rotation.y = Math.PI / 4;
+
+    let stone7 = stone.clone();
+    scene.add(stone7);
+    stone7.scale.set(0.3, 0.7, 0.7);
+    stone7.position.set(21, -0.08, -10.4);
+    stone7.rotation.y = (-Math.PI / 2) * 3;
   });
 }
 
@@ -187,6 +477,7 @@ async function init() {
   let aspect = window.innerWidth / window.innerHeight;
   camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
   camera.position.z = 5; // place the camera in space
+  // camera.position.z = -10;
   camera.position.y = 1.5;
 
   scene.add(camera);
@@ -203,7 +494,8 @@ async function init() {
 
   // controls = new OrbitControls(camera, renderer.domElement);
   controls = new FirstPersonControls(camera, renderer.domElement);
-  controls.movementSpeed = 1;
+  // controls.movementSpeed = 1;
+  controls.movementSpeed = 5;
   controls.lookSpeed = 0.01;
 
   controls.noFly = true;
@@ -259,6 +551,9 @@ async function init() {
   const plane = new THREE.Mesh(geometry, material);
   plane.rotation.x = -Math.PI / 2;
   scene.add(plane);
+
+  // const planeHelper = new THREE.PlaneHelper(plane, 1, 0xffff00);
+  // scene.add(planeHelper);
 
   // // sun
   // sun = new THREE.Vector3();
