@@ -1,23 +1,23 @@
 // code reference for ocean & sky: https://github.com/mrdoob/three.js/blob/master/examples/webgl_shaders_ocean.html
 
+// code reference for particles: https://github.com/mrdoob/three.js/blob/master/examples/webgl_buffergeometry_custom_attributes_particles.html
+
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 // import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { FirstPersonControls } from "three/addons/controls/FirstPersonControls.js";
 
-import { Water } from "three/addons/objects/Water.js";
-import { Sky } from "three/addons/objects/Sky.js";
-
 import { Island } from "./island.js";
 import { Boat } from "./boat.js";
 
-import { lerp } from "./utility.js";
-
 let scene, camera, renderer;
 
-let controls, water, sun;
+let controls;
 let clock = new THREE.Clock();
+
+// spatial audio
+let audioListener;
 
 let islands = [];
 let islandAmei, islandBucika, islandGerman;
@@ -29,22 +29,299 @@ let pointerOn = false;
 
 // let pointLight;
 
-let waterVideo = document.getElementById("water-video");
-let waterTexture = new THREE.VideoTexture(waterVideo);
+let particles, particleGeo, particleNum;
 
-let waterColorVideo = document.getElementById("water-video-color");
-let waterTextureColor = new THREE.VideoTexture(waterColorVideo);
-
-waterTexture.wrapS = THREE.RepeatWrapping;
-waterTexture.wrapT = THREE.RepeatWrapping;
-waterTexture.repeat.set(10000 / 512, 10000 / 512);
-
-waterTextureColor.wrapS = THREE.RepeatWrapping;
-waterTextureColor.wrapT = THREE.RepeatWrapping;
-waterTextureColor.repeat.set(10000 / 4.5, 10000 / 4.5);
-
-// first create a loader
+// loader for 3d assets
 let gltfLoader = new GLTFLoader();
+
+const rotateSpeed = 0.01; // Adjust this value as needed
+
+function onDocumentKeyDown(event) {
+  // Get the key code of the pressed key
+  var keyCode = event.which;
+
+  // 'A' key
+  if (keyCode == 65) {
+    event.preventDefault();
+    event.stopPropagation();
+    controls.enabled = false;
+    camera.rotation.y += rotateSpeed;
+    console.log("A is pressed");
+  }
+  // 'D' key
+  if (keyCode == 68) {
+    event.preventDefault();
+    event.stopPropagation();
+    controls.enabled = false;
+    camera.rotation.y -= rotateSpeed;
+    console.log("D is pressed");
+  }
+}
+
+// TO BE FIXED
+// Add the event listener for the 'keydown' event
+// document.addEventListener("keydown", onDocumentKeyDown);
+
+async function init() {
+  scene = new THREE.Scene();
+
+  scene.background = 0x000000;
+  // scene.fog = new THREE.FogExp2(0xc5bacb, 0.05);
+  scene.fog = new THREE.FogExp2(0x000000, 0.02);
+
+  let aspect = window.innerWidth / window.innerHeight;
+  camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
+  camera.position.z = 5; // place the camera in space
+  // camera.position.z = -10;
+  camera.position.y = 1.5;
+
+  scene.add(camera);
+
+  // camera.position.y = 3; // for dev and testing
+  camera.lookAt(0, 1.5, 0);
+
+  audioListener = new THREE.AudioListener();
+  camera.add(audioListener);
+
+  renderer = new THREE.WebGLRenderer({ alpha: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  document.body.appendChild(renderer.domElement);
+
+  // ----------- PARTICLES -----------
+  const uniforms = {
+    pointTexture: {
+      value: new THREE.TextureLoader().load("textures/spark.png"),
+    },
+  };
+
+  const shaderMaterial = new THREE.ShaderMaterial({
+    uniforms: uniforms,
+    vertexShader: document.getElementById("vertexshader").textContent,
+    fragmentShader: document.getElementById("fragmentshader").textContent,
+
+    blending: THREE.AdditiveBlending,
+    depthTest: false,
+    transparent: true,
+    vertexColors: true,
+  });
+
+  // Create a particle system
+  particleNum = 1000;
+  particleGeo = new THREE.BufferGeometry();
+  const particlePos = [];
+  const particleCol = [];
+  const particleSizes = [];
+  const color = new THREE.Color();
+
+  // Set up the positions and colors of the particles
+  for (let i = 0; i < particleNum; i++) {
+    particlePos.push((Math.random() * 2 - 1) * 50);
+    particlePos.push(Math.random() * 2 * 50);
+    particlePos.push((Math.random() * 2 - 1) * 50);
+
+    // color.setHSL(i / particleNum, 0.3, 0.5);
+    color.setHSL(46 / 360, 1, 0.5);
+    particleCol.push(color.r, color.g, color.b);
+
+    particleSizes.push(10);
+  }
+
+  particleGeo.setAttribute(
+    "position",
+    new THREE.Float32BufferAttribute(particlePos, 3)
+  );
+  particleGeo.setAttribute(
+    "color",
+    new THREE.Float32BufferAttribute(particleCol, 3)
+  );
+  particleGeo.setAttribute(
+    "size",
+    new THREE.Float32BufferAttribute(particleSizes, 1).setUsage(
+      THREE.DynamicDrawUsage
+    )
+  );
+
+  // const particleMat = new THREE.PointsMaterial({
+  //   size: 3,
+  //   vertexColors: true,
+  //   transparent: true,
+  //   opacity: 0.75,
+  //   sizeAttenuation: false,
+  // });
+
+  // const particleMat = new THREE.MeshStandardMaterial({
+  //   color: 0xffffff,
+  //   emissive: 0xffffff,
+  //   emissiveIntensity: 5,
+  //   scale: 0.1,
+  // });
+
+  particles = new THREE.Points(particleGeo, shaderMaterial);
+
+  scene.add(particles);
+
+  // controls = new OrbitControls(camera, renderer.domElement);
+  controls = new FirstPersonControls(camera, renderer.domElement);
+  // controls.movementSpeed = 1;
+  controls.movementSpeed = 5;
+  controls.lookSpeed = 0.01;
+
+  controls.noFly = true;
+  controls.lookVertical = false;
+
+  // add a raycast on click
+  mouse = new THREE.Vector2(0, 0);
+  document.addEventListener(
+    "mousemove",
+    (ev) => {
+      // three.js expects 'normalized device coordinates' (i.e. between -1 and 1 on both axes)
+      mouse.x = (ev.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(ev.clientY / window.innerHeight) * 2 + 1;
+    },
+    false
+  );
+
+  // water
+  const waterVideo = document.getElementById("water-video");
+  const waterTexture = new THREE.VideoTexture(waterVideo);
+
+  const waterColorVideo = document.getElementById("water-video-color");
+  const waterTextureColor = new THREE.VideoTexture(waterColorVideo);
+
+  waterTexture.wrapS = THREE.RepeatWrapping;
+  waterTexture.wrapT = THREE.RepeatWrapping;
+  waterTexture.repeat.set(10000 / 512, 10000 / 512);
+
+  waterTextureColor.wrapS = THREE.RepeatWrapping;
+  waterTextureColor.wrapT = THREE.RepeatWrapping;
+  waterTextureColor.repeat.set(10000 / 4.5, 10000 / 4.5);
+  const waterGeometry = new THREE.PlaneGeometry(10000, 10000);
+  const waterMaterial = new THREE.MeshStandardMaterial({
+    color: 0x555555,
+    roughness: 0,
+    metalness: 0.1,
+    map: waterTextureColor,
+    // emissive: 0xffffff,
+    // emissiveIntensity: 0.01,
+    // displacementMap: waterTexture,
+    // displacementScale: 1,
+  });
+  const waterPlane = new THREE.Mesh(waterGeometry, waterMaterial);
+  waterPlane.rotation.x = -Math.PI / 2;
+  scene.add(waterPlane);
+
+  // const planeHelper = new THREE.PlaneHelper(plane, 1, 0xffff00);
+  // scene.add(planeHelper);
+
+  // lights
+  scene.add(new THREE.AmbientLight(0xbbbbbb, 1));
+  // scene.add(new THREE.DirectionalLight(0xffffff, 1));
+
+  const pointLight = new THREE.PointLight(0x666666, 200, 1000000);
+  pointLight.position.set(0, 2, -10);
+  camera.add(pointLight);
+
+  // const helper = new THREE.PointLightHelper(pointLight);
+  // scene.add(helper);
+
+  window.addEventListener("resize", onWindowResize);
+
+  // islands
+  islandAmei = new Island(scene, audioListener, mouse, camera, "amei");
+  // ensure the model is loaded before adding it to the scene, otherwise would raise errors
+  await islandAmei.loadModel("./models/island.fbx");
+  await islandAmei.loadAudio("./audio/amei.mp3");
+  islandAmei.setPosition(30, -0.08, -15);
+  islandAmei.setScale(3);
+  islandAmei.playAudio();
+  islands.push(islandAmei);
+
+  islandBucika = new Island(scene, audioListener, mouse, camera, "bucika");
+  await islandBucika.loadModel("./models/island.fbx");
+  await islandBucika.loadAudio("./audio/bucika.mp3");
+  islandBucika.setPosition(3, -0.08, -30);
+  islandBucika.setRotation(0, Math.PI / 3, 0);
+  islandBucika.setScale(3);
+  islandBucika.playAudio();
+  islands.push(islandBucika);
+
+  islandGerman = new Island(scene, audioListener, mouse, camera, "german");
+  await islandGerman.loadModel("./models/island.fbx");
+  await islandGerman.loadAudio("./audio/german.mp3");
+  islandGerman.setPosition(-30, -0.08, -15);
+  islandGerman.setRotation(0, -Math.PI / 6, 0);
+  islandGerman.setScale(3);
+  islandGerman.playAudio();
+  islands.push(islandGerman);
+
+  // boat
+  // loadBoat();
+  boat = new Boat(scene, camera, clock);
+  boat.loadModel("./models/boat.glb");
+
+  // decorations
+  loadLeaf01();
+  loadLeaf02();
+  loadWaterlily();
+  loadGrass01();
+  loadStone();
+
+  loop();
+}
+
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function loop() {
+  window.requestAnimationFrame(loop); // pass the name of your loop function into this function
+
+  controls.update(clock.getDelta());
+
+  if (boat.mesh) {
+    boat.update();
+  }
+
+  for (let i = 0; i < islands.length; i++) {
+    let thisIsland = islands[i];
+    thisIsland.update();
+    if (thisIsland.hover) {
+      // console.log(thisIsland.name);
+      pointerOn = true;
+      // console.log("hovering on: " + thisIsland.name);
+      break;
+    } else {
+      pointerOn = false;
+    }
+  }
+
+  if (pointerOn) {
+    document.querySelector("canvas").style.cursor = "pointer";
+  } else {
+    document.querySelector("canvas").style.cursor = "auto";
+  }
+
+  const time = Date.now() * 0.005;
+
+  particles.rotation.y += 0.0001;
+  // particles.rotation.z = 0.001 * time;
+
+  const sizes = particleGeo.attributes.size.array;
+
+  for (let i = 0; i < particleNum; i++) {
+    sizes[i] = 1.5 * (2 + Math.sin(0.1 * i + time * 0.3));
+  }
+
+  particleGeo.attributes.size.needsUpdate = true;
+
+  renderer.render(scene, camera);
+}
+
+init();
 
 function loadLeaf01() {
   gltfLoader.load("./models/leaf01.glb", function (gltf) {
@@ -433,310 +710,3 @@ function loadStone() {
     stone7.rotation.y = (-Math.PI / 2) * 3;
   });
 }
-
-export let titleCards = document.getElementsByClassName("title-card");
-
-// spatial audio
-let audioListener;
-
-const rotateSpeed = 0.01; // Adjust this value as needed
-
-function onDocumentKeyDown(event) {
-  // Get the key code of the pressed key
-  var keyCode = event.which;
-
-  // 'A' key
-  if (keyCode == 65) {
-    event.preventDefault();
-    event.stopPropagation();
-    controls.enabled = false;
-    camera.rotation.y += rotateSpeed;
-    console.log("A is pressed");
-  }
-  // 'D' key
-  if (keyCode == 68) {
-    event.preventDefault();
-    event.stopPropagation();
-    controls.enabled = false;
-    camera.rotation.y -= rotateSpeed;
-    console.log("D is pressed");
-  }
-}
-
-// TO BE FIXED
-// Add the event listener for the 'keydown' event
-document.addEventListener("keypressed", onDocumentKeyDown);
-
-async function init() {
-  scene = new THREE.Scene();
-
-  scene.background = 0x000000;
-  // scene.fog = new THREE.FogExp2(0xc5bacb, 0.05);
-  scene.fog = new THREE.FogExp2(0x000000, 0.02);
-
-  let aspect = window.innerWidth / window.innerHeight;
-  camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
-  camera.position.z = 5; // place the camera in space
-  // camera.position.z = -10;
-  camera.position.y = 1.5;
-
-  scene.add(camera);
-
-  // camera.position.y = 3; // for dev and testing
-  camera.lookAt(0, 1.5, 0);
-
-  audioListener = new THREE.AudioListener();
-  camera.add(audioListener);
-
-  renderer = new THREE.WebGLRenderer({ alpha: true });
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
-
-  // controls = new OrbitControls(camera, renderer.domElement);
-  controls = new FirstPersonControls(camera, renderer.domElement);
-  // controls.movementSpeed = 1;
-  controls.movementSpeed = 5;
-  controls.lookSpeed = 0.01;
-
-  controls.noFly = true;
-  controls.lookVertical = false;
-
-  // add a raycast on click
-  mouse = new THREE.Vector2(0, 0);
-  document.addEventListener(
-    "mousemove",
-    (ev) => {
-      // three.js expects 'normalized device coordinates' (i.e. between -1 and 1 on both axes)
-      mouse.x = (ev.clientX / window.innerWidth) * 2 - 1;
-      mouse.y = -(ev.clientY / window.innerHeight) * 2 + 1;
-    },
-    false
-  );
-
-  // water
-  const waterGeometry = new THREE.PlaneGeometry(10000, 10000);
-  water = new Water(waterGeometry, {
-    textureWidth: 512,
-    textureHeight: 512,
-    waterNormals: new THREE.TextureLoader().load(
-      "textures/waternormals.jpg",
-      function (texture) {
-        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-      }
-    ),
-    sunDirection: new THREE.Vector3(),
-    sunColor: 0xffffff,
-    waterColor: 0xd5d1dd,
-    distortionScale: 5,
-    fog: scene.fog !== undefined,
-  });
-
-  water.rotation.x = -Math.PI / 2;
-  // scene.add(water);
-
-  const geometry = new THREE.PlaneGeometry(10000, 10000);
-  const material = new THREE.MeshStandardMaterial({
-    color: 0x555555,
-    roughness: 0.0,
-    metalness: 0.5,
-    map: waterTextureColor,
-    // displacementMap: waterTexture,
-    // displacementScale: 1,
-  });
-  // const material = new THREE.MeshLambertMaterial({
-  //   color: 0xfff700,
-  //   // envMap: waterTexture,
-  //   refractionRatio: 0.95,
-  // });
-  const plane = new THREE.Mesh(geometry, material);
-  plane.rotation.x = -Math.PI / 2;
-  scene.add(plane);
-
-  // const planeHelper = new THREE.PlaneHelper(plane, 1, 0xffff00);
-  // scene.add(planeHelper);
-
-  // // sun
-  // sun = new THREE.Vector3();
-
-  // // Skybox
-  // const sky = new Sky();
-  // sky.scale.setScalar(10000);
-  // scene.add(sky);
-
-  // const skyUniforms = sky.material.uniforms;
-
-  // skyUniforms["turbidity"].value = 100;
-  // skyUniforms["rayleigh"].value = 2;
-  // skyUniforms["mieCoefficient"].value = 0.005;
-  // skyUniforms["mieDirectionalG"].value = 0.8;
-
-  // const parameters = {
-  //   elevation: 2,
-  //   azimuth: 0,
-  // };
-
-  // const pmremGenerator = new THREE.PMREMGenerator(renderer);
-  // const sceneEnv = new THREE.Scene();
-
-  // let renderTarget;
-
-  // function updateSun() {
-  //   const phi = THREE.MathUtils.degToRad(90 - parameters.elevation);
-  //   const theta = THREE.MathUtils.degToRad(parameters.azimuth);
-
-  //   sun.setFromSphericalCoords(1, phi, theta);
-
-  //   sky.material.uniforms["sunPosition"].value.copy(sun);
-  //   water.material.uniforms["sunDirection"].value.copy(sun).normalize();
-
-  //   if (renderTarget !== undefined) renderTarget.dispose();
-
-  //   sceneEnv.add(sky);
-  //   renderTarget = pmremGenerator.fromScene(sceneEnv);
-  //   scene.add(sky);
-
-  //   scene.environment = renderTarget.texture;
-  // }
-
-  // updateSun();
-
-  // lights
-  scene.add(new THREE.AmbientLight(0xbbbbbb, 1));
-  // scene.add(new THREE.DirectionalLight(0xffffff, 1));
-
-  // pointLight = new THREE.PointLight(0xff0000, 1, 100);
-  // pointLight.position.set(0, 1, -5);
-  // scene.add(pointLight);
-  // camera.add(pointLight);
-
-  // const pointLightHelper = new THREE.PointLightHelper(pointLight, 1);
-  // scene.add(pointLightHelper);
-
-  const light = new THREE.PointLight(0x666666, 2000, 1000000);
-  light.position.set(0, 2, -10);
-  camera.add(light);
-
-  const helper = new THREE.PointLightHelper(light);
-  // scene.add(helper);
-
-  // camera.add(pointLight);
-
-  window.addEventListener("resize", onWindowResize);
-
-  // islands
-  islandAmei = new Island(scene, audioListener, mouse, camera, "amei");
-  // ensure the model is loaded before adding it to the scene, otherwise would raise errors
-  await islandAmei.loadModel("./models/island.fbx");
-  await islandAmei.loadAudio("./audio/amei.mp3");
-  islandAmei.setPosition(30, -0.08, -15);
-  islandAmei.setScale(3);
-  islandAmei.playAudio();
-  islands.push(islandAmei);
-
-  islandBucika = new Island(scene, audioListener, mouse, camera, "bucika");
-  await islandBucika.loadModel("./models/island.fbx");
-  await islandBucika.loadAudio("./audio/bucika.mp3");
-  islandBucika.setPosition(3, -0.08, -30);
-  islandBucika.setRotation(0, Math.PI / 3, 0);
-  islandBucika.setScale(3);
-  islandBucika.playAudio();
-  islands.push(islandBucika);
-
-  islandGerman = new Island(scene, audioListener, mouse, camera, "german");
-  await islandGerman.loadModel("./models/island.fbx");
-  await islandGerman.loadAudio("./audio/german.mp3");
-  islandGerman.setPosition(-30, -0.08, -15);
-  islandGerman.setRotation(0, -Math.PI / 6, 0);
-  islandGerman.setScale(3);
-  islandGerman.playAudio();
-  islands.push(islandGerman);
-
-  // boat
-  // loadBoat();
-  boat = new Boat(scene, camera, clock);
-  boat.loadModel("./models/boat.glb");
-
-  // decorations
-  loadLeaf01();
-  loadLeaf02();
-  loadWaterlily();
-  loadGrass01();
-  loadStone();
-
-  // // test box for collision
-  // let geo = new THREE.BoxGeometry(1, 1, 1);
-  // let mat = new THREE.MeshBasicMaterial();
-  // let box = new THREE.Mesh(geo, mat);
-  // scene.add(box);
-  // box.position.set(0, 1, -5);
-  // // box.layers.enable(3);   // to set the object as collidable, need to align with the raycaster setting
-
-  loop();
-}
-
-function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(window.innerWidth, window.innerHeight);
-}
-
-// function lerp(start, end, amt) {
-//   return (1 - amt) * start + amt * end;
-// }
-
-function loop() {
-  window.requestAnimationFrame(loop); // pass the name of your loop function into this function
-
-  controls.update(clock.getDelta());
-
-  // console.log(boat.rotation);
-  // boat.float();
-
-  if (boat.mesh) {
-    boat.update();
-  }
-
-  // // boat floating effect
-  // if (boat) {
-  //   // boat.rotation.x += 0.01; // for testing
-  //   // boat.rotation.x = Math.sin(clock.elapsedTime) * 0.04;
-
-  //   let startValRot = boat.rotation.x;
-  //   let endValRot =
-  //     perlin.get(clock.elapsedTime / 10, clock.elapsedTime / 2) * 0.1;
-  //   boat.rotation.x = lerp(startValRot, endValRot, 0.5);
-
-  //   let startValPosX = boat.position.x;
-  //   let endValPosX =
-  //     perlin.get((clock.elapsedTime + 100) / 10, clock.elapsedTime / 2) * 0.1;
-  //   boat.position.x = lerp(startValPosX, endValPosX, 0.5);
-  // }
-
-  water.material.uniforms["time"].value += 0.1 / 60.0;
-
-  for (let i = 0; i < islands.length; i++) {
-    let thisIsland = islands[i];
-    thisIsland.update();
-    if (thisIsland.hover) {
-      // console.log(thisIsland.name);
-      pointerOn = true;
-      // console.log("hovering on: " + thisIsland.name);
-      break;
-    } else {
-      pointerOn = false;
-    }
-  }
-
-  // console.log(pointerOn);
-
-  if (pointerOn) {
-    document.querySelector("canvas").style.cursor = "pointer";
-  } else {
-    document.querySelector("canvas").style.cursor = "auto";
-  }
-
-  renderer.render(scene, camera);
-}
-
-init();

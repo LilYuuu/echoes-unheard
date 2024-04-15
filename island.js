@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
-import { titleCards } from "./index.js";
 
 // import { OutlineEffect } from "three/examples/jsm/effects/OutlineEffect.js";
 
@@ -9,6 +8,8 @@ import { titleCards } from "./index.js";
 //   defaultColor: [0, 0, 1],
 //   defaultAlpha: 0.8,
 // });
+
+let titleCards = document.getElementsByClassName("title-card");
 
 export class Island {
   constructor(scene, listener, mouse, camera, name) {
