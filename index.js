@@ -13,6 +13,14 @@ import { Boat } from "./boat.js";
 
 import { Cloud, Clouds, CLOUD_URL } from "./Cloud.js";
 
+// postprocessing
+import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
+import { OutlinePass } from "three/addons/postprocessing/OutlinePass.js";
+import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+import { FXAAShader } from "three/addons/shaders/FXAAShader.js";
+
 let scene, camera, renderer;
 
 let controls;
@@ -36,6 +44,11 @@ let particles, particleGeo, particleNum;
 let clouds;
 let cloudArray;
 let cloudTexture = new THREE.TextureLoader().load(CLOUD_URL);
+
+// postprocessing
+let composer, effectFXAA;
+export let outlinePass;
+// export let selectedIslands = [];
 
 // loader for 3d assets
 let gltfLoader = new GLTFLoader();
@@ -93,6 +106,36 @@ async function init() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
   document.body.appendChild(renderer.domElement);
+
+  // ----------- POSPROCESSING -----------
+  composer = new EffectComposer(renderer);
+
+  const renderPass = new RenderPass(scene, camera);
+  composer.addPass(renderPass);
+
+  outlinePass = new OutlinePass(
+    new THREE.Vector2(window.innerWidth, window.innerHeight),
+    scene,
+    camera
+  );
+  // outlinePass.selectedObjects = selectedIslands;
+  outlinePass.edgeStrength = 3;
+  outlinePass.edgeGlow = 2;
+  outlinePass.edgeThickness = 4;
+  outlinePass.pulsePeriod = 3;
+  outlinePass.visibleEdgeColor.set("#ffdc7a");
+
+  composer.addPass(outlinePass);
+
+  const outputPass = new OutputPass();
+  composer.addPass(outputPass);
+
+  effectFXAA = new ShaderPass(FXAAShader);
+  effectFXAA.uniforms["resolution"].value.set(
+    1 / window.innerWidth,
+    1 / window.innerHeight
+  );
+  composer.addPass(effectFXAA);
 
   // ----------- PARTICLES -----------
   const uniforms = {
@@ -309,6 +352,13 @@ function onWindowResize() {
   camera.updateProjectionMatrix();
 
   renderer.setSize(window.innerWidth, window.innerHeight);
+
+  composer.setSize(width, height);
+
+  effectFXAA.uniforms["resolution"].value.set(
+    1 / window.innerWidth,
+    1 / window.innerHeight
+  );
 }
 
 function loop() {
@@ -326,12 +376,15 @@ function loop() {
     let thisIsland = islands[i];
     thisIsland.update();
     if (thisIsland.hover) {
-      // console.log(thisIsland.name);
       pointerOn = true;
       // console.log("hovering on: " + thisIsland.name);
+      // turn on outline
+      // outlinePass.selectedObjects = [thisIsland.mesh];
+      // selectedIslands.push(thisIsland.mesh)
       break;
     } else {
       pointerOn = false;
+      outlinePass.selectedObjects = [];
     }
   }
 
@@ -354,7 +407,8 @@ function loop() {
 
   particleGeo.attributes.size.needsUpdate = true;
 
-  renderer.render(scene, camera);
+  // renderer.render(scene, camera);
+  composer.render();
 }
 
 init();

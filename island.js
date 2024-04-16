@@ -1,6 +1,8 @@
 import * as THREE from "three";
 import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
 
+import { outlinePass } from "./index.js";
+
 // import { OutlineEffect } from "three/examples/jsm/effects/OutlineEffect.js";
 
 // export const outlineEffect = new OutlineEffect(renderer, {
@@ -107,6 +109,7 @@ export class Island {
       // console.log(card);
       // hide all the other cards if they are on
       // console.log(titleCards);
+
       for (let i = 0; i < titleCards.length; i++) {
         if (titleCards[i].style.display != "none") {
           titleCards[i].style.display = "none";
@@ -119,7 +122,8 @@ export class Island {
       } else {
         this.isActive = true;
         console.log("turn active");
-        // TODO: show textbox
+        // TODO: keep the outline
+        // outlinePass.selectedObjects = [this.mesh];
       }
     }
   }
@@ -137,8 +141,12 @@ export class Island {
         // document.querySelector("canvas").style.cursor = "pointer";
         // this.mesh.scale.set(0.15, 0.15, 0.15);
         // this.mesh.scale.multiplyScalar(1.1);
+        outlinePass.selectedObjects = [this.mesh];
       } else {
         this.hover = false;
+        if (!this.isActive) {
+          outlinePass.selectedObjects = [];
+        }
 
         // document.querySelector("canvas").style.cursor = "auto";
         // this.mesh.scale.set(0.12, 0.12, 0.12);
