@@ -1,26 +1,24 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
   <head>
+
+    <meta charset="UTF-8" />
+    
+    <title>The Echoes Unheard</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <link rel="stylesheet" href="style.css">
 
+    <!-- ******** Google Fonts ******** -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-  </head>
-  <body>
-    <!-- PointerLockControls -->
-    <!-- <div id="blocker">
-        <div id="instructions">
-            <p style="font-size:36px">
-                CLICK TO START
-            </p>
-            <p>
-                Move: WASD<br/>
-                Look: MOUSE
-            </p>
-        </div>
-    </div> -->
+    <!-- ****************************** -->
 
+  </head>
+
+  <body>
     <div class="title-card-wrapper">
       <div class="title-card" id="title-card-bucika">
         <div class="icon-wrapper icon-x-wrapper">
@@ -129,7 +127,7 @@
     <script src="./perlin.js"></script>
     <script type="module" src="index.js" defer></script>
 
-    <!-- <video id="water-video" src="./textures/water.mp4" muted autoplay style="visibility: hidden; width: 50px; height: 50px;"></video> -->
+    <!-- <video id="water-video" src="./textures//water.mp4" muted autoplay style="visibility: hidden; width: 50px; height: 50px;"></video> -->
 
     <video id="water-video" controls autoplay loop muted style="width: 1px; margin: 0; padding: 0;">
       <source src="./textures/sea-displace.mp4" type="video/mp4" />
@@ -139,4 +137,5 @@
       <source src="./textures/color-sea.mp4" type="video/mp4" />
     </video>
   </body>
+
 </html>

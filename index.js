@@ -1,3 +1,5 @@
+// import "./style.css";
+
 // code reference for ocean & sky: https://github.com/mrdoob/three.js/blob/master/examples/webgl_shaders_ocean.html
 
 // code reference for particles: https://github.com/mrdoob/three.js/blob/master/examples/webgl_buffergeometry_custom_attributes_particles.html
@@ -10,6 +12,8 @@ import { FirstPersonControls } from "three/addons/controls/FirstPersonControls.j
 
 import { Island } from "./island.js";
 import { Boat } from "./boat.js";
+
+import * as DREIVANILLA from "@pmndrs/vanilla";
 
 let scene, camera, renderer;
 
@@ -91,7 +95,7 @@ async function init() {
   // ----------- PARTICLES -----------
   const uniforms = {
     pointTexture: {
-      value: new THREE.TextureLoader().load("textures/spark.png"),
+      value: new THREE.TextureLoader().load("./textures/spark.png"),
     },
   };
 

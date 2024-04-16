@@ -1,21 +1,17 @@
 {
-  "name": "echos-unheard",
-  "version": "1.0.0",
-  "description": "",
+  "name": "echoes-unheard",
+  "private": true,
+  "version": "0.0.0",
   "type": "module",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/LilYuuu/echos-unheard.git"
+  "devDependencies": {
+    "vite": "^5.2.0"
   },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/LilYuuu/echos-unheard/issues"
-  },
-  "homepage": "https://github.com/LilYuuu/echos-unheard#readme"
+  "dependencies": {
+    "@pmndrs/vanilla": "^1.16.0"
+  }
 }
