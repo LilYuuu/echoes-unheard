@@ -11,6 +11,8 @@ import { FirstPersonControls } from "three/addons/controls/FirstPersonControls.j
 import { Island } from "./island.js";
 import { Boat } from "./boat.js";
 
+import { Cloud, Clouds, CLOUD_URL } from "./Cloud.js";
+
 let scene, camera, renderer;
 
 let controls;
@@ -30,6 +32,10 @@ let pointerOn = false;
 // let pointLight;
 
 let particles, particleGeo, particleNum;
+
+let clouds;
+let cloudArray;
+let cloudTexture = new THREE.TextureLoader().load(CLOUD_URL);
 
 // loader for 3d assets
 let gltfLoader = new GLTFLoader();
@@ -182,6 +188,34 @@ async function init() {
     false
   );
 
+  // create main clouds group
+  clouds = new Clouds({ texture: cloudTexture });
+  scene.add(clouds);
+  // clouds.frustumCulled = false;
+  // clouds.scale.set(0.5, 0.5, 0.5);
+  // clouds.position.set(0, 2, 0);
+
+  // create cloud and add it to clouds group
+  // const cloud_0 = new Cloud();
+  // clouds.add(cloud_0);
+  for (let i = 0; i < 5; i++) {
+    let posX = Math.random() * 50;
+    let posY = Math.random() * 10;
+    let posZ = Math.random() * 10;
+    let cloud = new Cloud({
+      speed: 0.3 * Math.random(),
+      volume: 10 * Math.random(),
+    });
+    cloud.position.x = posX;
+    cloud.position.y = posY;
+    cloud.position.z = posZ;
+    // cloud.frustumCulled = false;
+    cloud.updateCloud();
+
+    clouds.add(cloud);
+    // cloudArray.push(cloud);
+  }
+
   // water
   const waterVideo = document.getElementById("water-video");
   const waterTexture = new THREE.VideoTexture(waterVideo);
@@ -281,6 +315,8 @@ function loop() {
   window.requestAnimationFrame(loop); // pass the name of your loop function into this function
 
   controls.update(clock.getDelta());
+
+  clouds.update(camera, clock.getElapsedTime(), clock.getDelta());
 
   if (boat.mesh) {
     boat.update();
