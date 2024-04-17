@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
 
-import { outlinePass } from "./index.js";
+import { camera, controls, outlinePass } from "./index.js";
 
 // import { OutlineEffect } from "three/examples/jsm/effects/OutlineEffect.js";
 
@@ -116,6 +116,14 @@ export class Island {
         }
       }
       card.style.display = "block";
+      setTimeout(function () {
+        card.style.opacity = 1;
+      }, 100);
+
+      // this.moveCamera();
+      // controls.enabled = true;
+      // controls.update();
+
       if (this.isActive) {
         this.isActive = false;
         console.log("turn inactive");
@@ -153,5 +161,39 @@ export class Island {
         // this.mesh.scale.multiplyScalar(1.0);
       }
     }
+  }
+
+  moveCamera() {
+    // const newCameraPos = this.mesh.position.clone().add(new THREE.Vector3(0, 0, 10));
+    const newCameraPos = camera.position.clone();
+    newCameraPos.x = this.mesh.position.x;
+    newCameraPos.z = this.mesh.position.z + 20;
+    // camera.up = new THREE.Vector3(0, 0, 0);
+
+    const newLookAtPos = this.mesh.position;
+
+    const duration = 30000; // in ms
+    const startTime = Date.now();
+
+    function updateCameraPos() {
+      const elaspedTime = Date.now() - startTime;
+      const t = elaspedTime / duration;
+
+      controls.enabled = false;
+      if (t < 1) {
+        camera.position.lerpVectors(camera.position, newCameraPos, t);
+        // controls.enabled = false;
+        camera.lookAt(newLookAtPos);
+        // controls.copy(newLookAtPos);
+        controls.update();
+        requestAnimationFrame(updateCameraPos);
+      } else {
+        camera.position.copy(newCameraPos);
+        camera.lookAt(newLookAtPos);
+      }
+      controls.enabled = true;
+    }
+
+    updateCameraPos();
   }
 }

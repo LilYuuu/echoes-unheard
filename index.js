@@ -21,9 +21,10 @@ import { OutlinePass } from "three/addons/postprocessing/OutlinePass.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { FXAAShader } from "three/addons/shaders/FXAAShader.js";
 
-let scene, camera, renderer;
+let scene, renderer;
+export let camera;
 
-let controls;
+export let controls;
 let clock = new THREE.Clock();
 
 // spatial audio
@@ -84,9 +85,9 @@ function onDocumentKeyDown(event) {
 async function init() {
   scene = new THREE.Scene();
 
-  scene.background = 0x000000;
+  scene.background = 0x00081d;
   // scene.fog = new THREE.FogExp2(0xc5bacb, 0.05);
-  scene.fog = new THREE.FogExp2(0x000000, 0.02);
+  scene.fog = new THREE.FogExp2(0x00081d, 0.05);
 
   let aspect = window.innerWidth / window.innerHeight;
   camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
@@ -232,8 +233,8 @@ async function init() {
   );
 
   // create main clouds group
-  clouds = new Clouds({ texture: cloudTexture });
-  scene.add(clouds);
+  // clouds = new Clouds({ texture: cloudTexture });
+  // scene.add(clouds);
   // clouds.frustumCulled = false;
   // clouds.scale.set(0.5, 0.5, 0.5);
   // clouds.position.set(0, 2, 0);
@@ -241,23 +242,23 @@ async function init() {
   // create cloud and add it to clouds group
   // const cloud_0 = new Cloud();
   // clouds.add(cloud_0);
-  for (let i = 0; i < 5; i++) {
-    let posX = Math.random() * 50;
-    let posY = Math.random() * 10;
-    let posZ = Math.random() * 10;
-    let cloud = new Cloud({
-      speed: 0.3 * Math.random(),
-      volume: 10 * Math.random(),
-    });
-    cloud.position.x = posX;
-    cloud.position.y = posY;
-    cloud.position.z = posZ;
-    // cloud.frustumCulled = false;
-    cloud.updateCloud();
+  // for (let i = 0; i < 30; i++) {
+  //   let posX = Math.random() * 50;
+  //   let posY = (Math.random() + 0.2) * 10;
+  //   let posZ = (Math.random() - 1) * 5;
+  //   let cloud = new Cloud({
+  //     speed: 0.3 * Math.random(),
+  //     volume: 10 * Math.random(),
+  //   });
+  //   cloud.position.x = posX;
+  //   cloud.position.y = posY;
+  //   cloud.position.z = posZ;
+  // cloud.frustumCulled = false;
+  // cloud.updateCloud();
 
-    clouds.add(cloud);
-    // cloudArray.push(cloud);
-  }
+  // clouds.add(cloud);
+  // cloudArray.push(cloud);
+  // }
 
   // water
   const waterVideo = document.getElementById("water-video");
@@ -292,7 +293,7 @@ async function init() {
   // scene.add(planeHelper);
 
   // lights
-  scene.add(new THREE.AmbientLight(0xbbbbbb, 1));
+  scene.add(new THREE.AmbientLight(0xbbbbbb, 2));
   // scene.add(new THREE.DirectionalLight(0xffffff, 1));
 
   const pointLight = new THREE.PointLight(0x666666, 200, 1000000);
@@ -353,7 +354,7 @@ function onWindowResize() {
 
   renderer.setSize(window.innerWidth, window.innerHeight);
 
-  composer.setSize(width, height);
+  composer.setSize(window.innerWidth, window.innerHeight);
 
   effectFXAA.uniforms["resolution"].value.set(
     1 / window.innerWidth,
@@ -366,7 +367,7 @@ function loop() {
 
   controls.update(clock.getDelta());
 
-  clouds.update(camera, clock.getElapsedTime(), clock.getDelta());
+  // clouds.update(camera, clock.getElapsedTime(), clock.getDelta());
 
   if (boat.mesh) {
     boat.update();
