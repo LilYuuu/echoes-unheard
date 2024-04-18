@@ -64,7 +64,7 @@ export class Boat {
     // this.raycaster.set(origin, new THREE.Vector3(0, -1, 0));
 
     if (Object.values(this.obstacles).indexOf(true) >= 0) {
-      console.log(this.obstacles);
+      // console.log(this.obstacles);
     }
   }
 
@@ -167,7 +167,7 @@ export class Boat {
         collisions.length > 0 &&
         collisions[0].distance < detectCollisionDistance
       ) {
-        console.log("collision detected");
+        // console.log("collision detected");
         return true;
       }
     }

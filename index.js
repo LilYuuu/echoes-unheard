@@ -13,11 +13,20 @@ import { FirstPersonControls } from "three/addons/controls/FirstPersonControls.j
 import { Island } from "./island.js";
 import { Boat } from "./boat.js";
 
-import * as DREIVANILLA from "@pmndrs/vanilla";
+import { Cloud, Clouds, CLOUD_URL } from "./Cloud.js";
 
-let scene, camera, renderer;
+// postprocessing
+import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
+import { OutlinePass } from "three/addons/postprocessing/OutlinePass.js";
+import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+import { FXAAShader } from "three/addons/shaders/FXAAShader.js";
 
-let controls;
+let scene, renderer;
+export let camera;
+
+export let controls;
 let clock = new THREE.Clock();
 
 // spatial audio
@@ -34,6 +43,15 @@ let pointerOn = false;
 // let pointLight;
 
 let particles, particleGeo, particleNum;
+
+let clouds;
+let cloudArray;
+let cloudTexture = new THREE.TextureLoader().load(CLOUD_URL);
+
+// postprocessing
+let composer, effectFXAA;
+export let outlinePass;
+// export let selectedIslands = [];
 
 // loader for 3d assets
 let gltfLoader = new GLTFLoader();
@@ -69,9 +87,9 @@ function onDocumentKeyDown(event) {
 async function init() {
   scene = new THREE.Scene();
 
-  scene.background = 0x000000;
+  scene.background = 0x00081d;
   // scene.fog = new THREE.FogExp2(0xc5bacb, 0.05);
-  scene.fog = new THREE.FogExp2(0x000000, 0.02);
+  scene.fog = new THREE.FogExp2(0x00081d, 0.05);
 
   let aspect = window.innerWidth / window.innerHeight;
   camera = new THREE.PerspectiveCamera(75, aspect, 0.1, 1000);
@@ -91,6 +109,36 @@ async function init() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
   document.body.appendChild(renderer.domElement);
+
+  // ----------- POSPROCESSING -----------
+  composer = new EffectComposer(renderer);
+
+  const renderPass = new RenderPass(scene, camera);
+  composer.addPass(renderPass);
+
+  outlinePass = new OutlinePass(
+    new THREE.Vector2(window.innerWidth, window.innerHeight),
+    scene,
+    camera
+  );
+  // outlinePass.selectedObjects = selectedIslands;
+  outlinePass.edgeStrength = 3;
+  outlinePass.edgeGlow = 2;
+  outlinePass.edgeThickness = 4;
+  outlinePass.pulsePeriod = 3;
+  outlinePass.visibleEdgeColor.set("#ffdc7a");
+
+  composer.addPass(outlinePass);
+
+  const outputPass = new OutputPass();
+  composer.addPass(outputPass);
+
+  effectFXAA = new ShaderPass(FXAAShader);
+  effectFXAA.uniforms["resolution"].value.set(
+    1 / window.innerWidth,
+    1 / window.innerHeight
+  );
+  composer.addPass(effectFXAA);
 
   // ----------- PARTICLES -----------
   const uniforms = {
@@ -186,6 +234,34 @@ async function init() {
     false
   );
 
+  // create main clouds group
+  // clouds = new Clouds({ texture: cloudTexture });
+  // scene.add(clouds);
+  // clouds.frustumCulled = false;
+  // clouds.scale.set(0.5, 0.5, 0.5);
+  // clouds.position.set(0, 2, 0);
+
+  // create cloud and add it to clouds group
+  // const cloud_0 = new Cloud();
+  // clouds.add(cloud_0);
+  // for (let i = 0; i < 30; i++) {
+  //   let posX = Math.random() * 50;
+  //   let posY = (Math.random() + 0.2) * 10;
+  //   let posZ = (Math.random() - 1) * 5;
+  //   let cloud = new Cloud({
+  //     speed: 0.3 * Math.random(),
+  //     volume: 10 * Math.random(),
+  //   });
+  //   cloud.position.x = posX;
+  //   cloud.position.y = posY;
+  //   cloud.position.z = posZ;
+  // cloud.frustumCulled = false;
+  // cloud.updateCloud();
+
+  // clouds.add(cloud);
+  // cloudArray.push(cloud);
+  // }
+
   // water
   const waterVideo = document.getElementById("water-video");
   const waterTexture = new THREE.VideoTexture(waterVideo);
@@ -219,7 +295,7 @@ async function init() {
   // scene.add(planeHelper);
 
   // lights
-  scene.add(new THREE.AmbientLight(0xbbbbbb, 1));
+  scene.add(new THREE.AmbientLight(0xbbbbbb, 2));
   // scene.add(new THREE.DirectionalLight(0xffffff, 1));
 
   const pointLight = new THREE.PointLight(0x666666, 200, 1000000);
@@ -279,12 +355,21 @@ function onWindowResize() {
   camera.updateProjectionMatrix();
 
   renderer.setSize(window.innerWidth, window.innerHeight);
+
+  composer.setSize(window.innerWidth, window.innerHeight);
+
+  effectFXAA.uniforms["resolution"].value.set(
+    1 / window.innerWidth,
+    1 / window.innerHeight
+  );
 }
 
 function loop() {
   window.requestAnimationFrame(loop); // pass the name of your loop function into this function
 
   controls.update(clock.getDelta());
+
+  // clouds.update(camera, clock.getElapsedTime(), clock.getDelta());
 
   if (boat.mesh) {
     boat.update();
@@ -294,12 +379,15 @@ function loop() {
     let thisIsland = islands[i];
     thisIsland.update();
     if (thisIsland.hover) {
-      // console.log(thisIsland.name);
       pointerOn = true;
       // console.log("hovering on: " + thisIsland.name);
+      // turn on outline
+      // outlinePass.selectedObjects = [thisIsland.mesh];
+      // selectedIslands.push(thisIsland.mesh)
       break;
     } else {
       pointerOn = false;
+      outlinePass.selectedObjects = [];
     }
   }
 
@@ -322,7 +410,8 @@ function loop() {
 
   particleGeo.attributes.size.needsUpdate = true;
 
-  renderer.render(scene, camera);
+  // renderer.render(scene, camera);
+  composer.render();
 }
 
 init();

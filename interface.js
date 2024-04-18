@@ -26,7 +26,12 @@ for (let i = 0; i < xButtons.length; i++) {
     }
 
     if (targetParent && targetParent.style.display != "none") {
-      targetParent.style.display = "none";
+      targetParent.style.opacity = 0;
+      setTimeout(function () {
+        targetParent.style.display = "none";
+        // targetParent.style.opacity = 1;
+        targetParent.style.opacity = "";
+      }, 300);
     }
   });
 }
@@ -48,7 +53,11 @@ for (let i = 0; i < bookIconWrappers.length; i++) {
   });
 
   thisBookIconWrapper.addEventListener("click", () => {
-    document.querySelector(".journal").style.display = "block";
+    const journal = document.querySelector(".journal");
+    journal.style.display = "block";
+    setTimeout(function () {
+      journal.style.opacity = 1;
+    }, 100);
   });
 }
 
