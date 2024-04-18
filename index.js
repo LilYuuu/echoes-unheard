@@ -84,6 +84,15 @@ function onDocumentKeyDown(event) {
   }
 }
 
+// to prevent unintentional dashing when mouse is clicked
+document.addEventListener("mousedown", () => {
+  controls.enabled = false;
+});
+
+document.addEventListener("mouseup", () => {
+  controls.enabled = true;
+});
+
 // TO BE FIXED
 // Add the event listener for the 'keydown' event
 // document.addEventListener("keydown", onDocumentKeyDown);
