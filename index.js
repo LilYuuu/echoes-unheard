@@ -39,6 +39,8 @@ let boat;
 
 let mouse;
 let pointerOn = false;
+let makeTurn = false;
+let rotateSpeed = 0.005;
 
 // let pointLight;
 
@@ -56,8 +58,6 @@ export let outlinePass;
 // loader for 3d assets
 let gltfLoader = new GLTFLoader();
 
-const rotateSpeed = 0.01; // Adjust this value as needed
-
 function onDocumentKeyDown(event) {
   // Get the key code of the pressed key
   var keyCode = event.which;
@@ -67,22 +67,29 @@ function onDocumentKeyDown(event) {
     event.preventDefault();
     event.stopPropagation();
     controls.enabled = false;
-    camera.rotation.y += rotateSpeed;
-    console.log("A is pressed");
+    rotateSpeed = Math.abs(rotateSpeed);
+    makeTurn = true;
+    // camera.rotation.y += rotateSpeed;
+    // console.log("A is pressed");
   }
   // 'D' key
   if (keyCode == 68) {
     event.preventDefault();
     event.stopPropagation();
     controls.enabled = false;
-    camera.rotation.y -= rotateSpeed;
-    console.log("D is pressed");
+    rotateSpeed = -Math.abs(rotateSpeed);
+    makeTurn = true;
+    // camera.rotation.y -= rotateSpeed;
+    // console.log("D is pressed");
   }
 }
 
 // TO BE FIXED
 // Add the event listener for the 'keydown' event
 // document.addEventListener("keydown", onDocumentKeyDown);
+// document.addEventListener("keyup", () => {
+//   controls.enabled = true;
+// });
 
 async function init() {
   scene = new THREE.Scene();
@@ -366,6 +373,10 @@ function onWindowResize() {
 
 function loop() {
   window.requestAnimationFrame(loop); // pass the name of your loop function into this function
+
+  if (makeTurn) {
+    camera.rotation.y += rotateSpeed;
+  }
 
   controls.update(clock.getDelta());
 
