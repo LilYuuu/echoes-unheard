@@ -241,16 +241,11 @@ async function init() {
     false
   );
 
-  // create main clouds group
+  // // create main clouds group
   // clouds = new Clouds({ texture: cloudTexture });
   // scene.add(clouds);
-  // clouds.frustumCulled = false;
-  // clouds.scale.set(0.5, 0.5, 0.5);
-  // clouds.position.set(0, 2, 0);
 
-  // create cloud and add it to clouds group
-  // const cloud_0 = new Cloud();
-  // clouds.add(cloud_0);
+  // // create cloud and add it to clouds group
   // for (let i = 0; i < 30; i++) {
   //   let posX = Math.random() * 50;
   //   let posY = (Math.random() + 0.2) * 10;
@@ -262,12 +257,13 @@ async function init() {
   //   cloud.position.x = posX;
   //   cloud.position.y = posY;
   //   cloud.position.z = posZ;
-  // cloud.frustumCulled = false;
-  // cloud.updateCloud();
+  //   cloud.updateCloud();
 
-  // clouds.add(cloud);
-  // cloudArray.push(cloud);
+  //   clouds.add(cloud);
+  //   cloudArray.push(cloud);
   // }
+
+  // // also need to update clouds group in the loop function below
 
   // water
   const waterVideo = document.getElementById("water-video");
