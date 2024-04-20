@@ -11,6 +11,10 @@ import { camera, controls, outlinePass } from "./index.js";
 //   defaultAlpha: 0.8,
 // });
 
+import { showJournal } from "./interface.js";
+
+export let curIsland;
+
 let titleCards = document.getElementsByClassName("title-card");
 
 export class Island {
@@ -103,7 +107,11 @@ export class Island {
 
   onClick() {
     if (this.hover) {
-      console.log("clicked on object");
+      // console.log("clicked on object");
+      // console.log(curIsland);
+      curIsland = this.name;
+      console.log(curIsland);
+      console.log(showJournal);
       let card = document.getElementById(`title-card-${this.name}`);
       // console.log(`title-card-${this.name}`);
       // console.log(card);
@@ -120,7 +128,7 @@ export class Island {
         card.style.opacity = 1;
       }, 100);
 
-      // this.moveCamera();
+      this.moveCamera();
       // controls.enabled = true;
       // controls.update();
 
@@ -172,26 +180,28 @@ export class Island {
 
     const newLookAtPos = this.mesh.position;
 
-    const duration = 30000; // in ms
+    const duration = 3000; // in ms
     const startTime = Date.now();
+    controls.enabled = false;
+    console.log("taking over controls");
 
     function updateCameraPos() {
       const elaspedTime = Date.now() - startTime;
       const t = elaspedTime / duration;
 
-      controls.enabled = false;
+      // controls.enabled = false;
       if (t < 1) {
         camera.position.lerpVectors(camera.position, newCameraPos, t);
-        // controls.enabled = false;
         camera.lookAt(newLookAtPos);
         // controls.copy(newLookAtPos);
         controls.update();
         requestAnimationFrame(updateCameraPos);
       } else {
+        console.log("releasing controls");
+        controls.enabled = true;
         camera.position.copy(newCameraPos);
         camera.lookAt(newLookAtPos);
       }
-      controls.enabled = true;
     }
 
     updateCameraPos();

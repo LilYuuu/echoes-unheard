@@ -1,3 +1,7 @@
+import { curIsland } from "./island.js";
+
+export let showJournal = false;
+
 // get mouse pos
 let mouseX, mouseY;
 window.addEventListener("mousemove", (ev) => {
@@ -12,6 +16,9 @@ let xButtons = document.getElementsByClassName("icon-x-wrapper");
 for (let i = 0; i < xButtons.length; i++) {
   xButtons[i].addEventListener("click", (ev) => {
     // console.log(ev.target.tagName);
+
+    // no matter the x button is in a journal container or a title card
+    showJournal = false;
 
     let targetParent;
     if (ev.target.tagName == "DIV") {
@@ -32,6 +39,8 @@ for (let i = 0; i < xButtons.length; i++) {
         // targetParent.style.opacity = 1;
         targetParent.style.opacity = "";
       }, 300);
+      // const journal = document.querySelector(".journal");
+      // journal.style.display = "none";
     }
   });
 }
@@ -53,10 +62,18 @@ for (let i = 0; i < bookIconWrappers.length; i++) {
   });
 
   thisBookIconWrapper.addEventListener("click", () => {
+    showJournal = true;
+
     const journal = document.querySelector(".journal");
-    journal.style.display = "block";
+
+    const journalContainer = document.querySelector(`#journal-${curIsland}`);
+    console.log(`#journal-${curIsland}`);
+
+    // journalContainer.style.display = "block";
+
+    journalContainer.style.display = "block";
     setTimeout(function () {
-      journal.style.opacity = 1;
+      journalContainer.style.opacity = 1;
     }, 100);
   });
 }

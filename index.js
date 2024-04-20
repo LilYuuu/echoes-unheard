@@ -33,7 +33,8 @@ let clock = new THREE.Clock();
 let audioListener;
 
 let islands = [];
-let islandAmei, islandBucika, islandGerman;
+let islandRuan, islandBucika, islandGerman;
+// export let curIsland = "hi";
 
 let boat;
 
@@ -320,14 +321,14 @@ async function init() {
   window.addEventListener("resize", onWindowResize);
 
   // islands
-  islandAmei = new Island(scene, audioListener, mouse, camera, "amei");
+  islandRuan = new Island(scene, audioListener, mouse, camera, "ruan");
   // ensure the model is loaded before adding it to the scene, otherwise would raise errors
-  await islandAmei.loadModel("./models/island.fbx");
-  await islandAmei.loadAudio("./audio/amei.mp3");
-  islandAmei.setPosition(30, -0.08, -15);
-  islandAmei.setScale(3);
-  islandAmei.playAudio();
-  islands.push(islandAmei);
+  await islandRuan.loadModel("./models/island.fbx");
+  await islandRuan.loadAudio("./audio/ruan.mp3");
+  islandRuan.setPosition(30, -0.08, -15);
+  islandRuan.setScale(3);
+  islandRuan.playAudio();
+  islands.push(islandRuan);
 
   islandBucika = new Island(scene, audioListener, mouse, camera, "bucika");
   await islandBucika.loadModel("./models/island.fbx");
