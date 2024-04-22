@@ -80,29 +80,57 @@ for (let i = 0; i < bookIconWrappers.length; i++) {
 
 // hover to show translate
 // console.log(document.querySelector(".journal-dots"));
-let journalDotsBucika = document.getElementsByClassName("journal-dots bucika");
-// console.log(journalDotsBucika);
+// let journalDotsBucika = document.getElementsByClassName("journal-dots bucika");
+// // console.log(journalDotsBucika);
 
-for (let i = 0; i < journalDotsBucika.length; i++) {
-  let thisDot = journalDotsBucika[i];
-  thisDot.addEventListener("mouseenter", () => {
-    // console.log("show translation");
-    let translationCard = document.querySelector(".journal-translation");
-    // console.log(journalEntries.bucika[i]);
-    translationCard.innerHTML = journalEntries.bucika[i];
-    // translationCard.style.position = "absolute";
-    translationCard.style.visibility = "visible";
-    translationCard.style.opacity = 1;
-    translationCard.style.left = mouseX + "px";
-    translationCard.style.top = mouseY + "px";
-  });
-  thisDot.addEventListener("mouseleave", () => {
-    // console.log("hide translation");
-    let translationCard = document.querySelector(".journal-translation");
-    // translationCard.style.position = "float";
-    translationCard.style.visibility = "hidden";
-    // translationCard.style.left = "0px";
-    // translationCard.style.top = "0px";
-    translationCard.style.opacity = 0;
-  });
+// for (let i = 0; i < journalDotsBucika.length; i++) {
+//   let thisDot = journalDotsBucika[i];
+//   thisDot.addEventListener("mouseenter", () => {
+//     // console.log("show translation");
+//     let translationCard = document.querySelector(".journal-translation");
+//     // console.log(journalEntries.bucika[i]);
+//     translationCard.innerHTML = journalEntries.bucika[i];
+//     // translationCard.style.position = "absolute";
+//     translationCard.style.visibility = "visible";
+//     translationCard.style.opacity = 1;
+//     translationCard.style.left = mouseX + "px";
+//     translationCard.style.top = mouseY + "px";
+//   });
+//   thisDot.addEventListener("mouseleave", () => {
+//     // console.log("hide translation");
+//     let translationCard = document.querySelector(".journal-translation");
+//     // translationCard.style.position = "float";
+//     translationCard.style.visibility = "hidden";
+//     // translationCard.style.left = "0px";
+//     // translationCard.style.top = "0px";
+//     translationCard.style.opacity = 0;
+//   });
+// }
+
+function showTranslation(songName) {
+  let journalDots = document.getElementsByClassName(`journal-dots ${songName}`);
+
+  for (let i = 0; i < journalDots.length; i++) {
+    let thisDot = journalDots[i];
+    thisDot.addEventListener("mouseenter", () => {
+      let translationCard = document.querySelector(".journal-translation");
+      translationCard.innerHTML = journalEntries[songName][i];
+      translationCard.style.visibility = "visible";
+      translationCard.style.opacity = 1;
+      translationCard.style.left = mouseX + "px";
+      translationCard.style.top = mouseY + "px";
+    });
+    thisDot.addEventListener("mouseleave", () => {
+      // console.log("hide translation");
+      let translationCard = document.querySelector(".journal-translation");
+      // translationCard.style.position = "float";
+      translationCard.style.visibility = "hidden";
+      // translationCard.style.left = "0px";
+      // translationCard.style.top = "0px";
+      translationCard.style.opacity = 0;
+    });
+  }
 }
+
+showTranslation("bucika");
+showTranslation("german");
