@@ -128,7 +128,7 @@ export class Island {
         card.style.opacity = 1;
       }, 100);
 
-      this.moveCamera();
+      // this.moveCamera();
       // controls.enabled = true;
       // controls.update();
 
