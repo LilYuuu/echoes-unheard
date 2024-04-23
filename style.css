@@ -19,8 +19,51 @@ body {
     display: block;
     /* position:fixed;  */
     left: 0; 
-    top: 0; 
+    top: 0;
     z-index: -1;
+  }
+
+  #progress-bar-container {
+    position: absolute;
+    left: 50%;
+    top: 80%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    /* background-color: rgba(0,0,0,0.7); */
+    background-color: rgba(0, 8, 29, 0.5);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all ease 1s;
+  }
+
+  #progress-bar {
+    width: 15%;
+    margin-top: 1%;
+    height: 1%;
+    transition: all ease 1s;
+    /* border: 0.5px solid white; */
+    border-radius: 10px;
+  }
+
+  #progress-bar::-webkit-progress-bar {
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.3);
+    /* height: 2%; */
+  }
+
+  #progress-bar::-webkit-progress-value {
+    border-radius: 10px;
+    background-color: white;
+    /* height: 2%; */
+  }
+
+  #progress-bar-container label {
+    color: white;
+    font-size: 1rem;
   }
 
 

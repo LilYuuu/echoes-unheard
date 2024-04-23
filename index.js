@@ -23,6 +23,44 @@ import { OutlinePass } from "three/addons/postprocessing/OutlinePass.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { FXAAShader } from "three/addons/shaders/FXAAShader.js";
 
+// loading manager
+export const loadingManager = new THREE.LoadingManager();
+
+// loadingManager.onStart = function (url, itemsLoaded, itemsTotal) {
+//   console.log(
+//     "Started loading file: " +
+//       url +
+//       ".\nLoaded " +
+//       itemsLoaded +
+//       " of " +
+//       itemsTotal +
+//       " files."
+//   );
+// };
+
+const progressBar = document.getElementById("progress-bar");
+const progressBarContainer = document.getElementById("progress-bar-container");
+
+loadingManager.onStart = (url, itemsLoaded, itemsTotal) => {
+  console.log(`Started loading: ${url}`);
+  // progressBarContainer.style.display = "block"; // Display the progress bar.
+};
+
+loadingManager.onLoad = () => {
+  console.log("All resources loaded");
+
+  progressBarContainer.style.opacity = 0;
+  setTimeout(function () {
+    progressBarContainer.style.display = "none";
+  }, 2000);
+};
+
+loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
+  const progress = (itemsLoaded / itemsTotal) * 100;
+  console.log(`Loading ${url}: ${Math.round(progress)}%`);
+  progressBar.value = progress;
+};
+
 let scene, renderer;
 export let camera;
 
@@ -57,7 +95,7 @@ export let outlinePass;
 // export let selectedIslands = [];
 
 // loader for 3d assets
-let gltfLoader = new GLTFLoader();
+export let gltfLoader = new GLTFLoader(loadingManager);
 
 function onDocumentKeyDown(event) {
   // Get the key code of the pressed key

@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { lerp } from "./utility.js";
+import { loadingManager } from "./index.js";
 
 export class Boat {
   constructor(scene, camera, clock) {
