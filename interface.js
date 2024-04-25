@@ -9,6 +9,7 @@ export let showJournal = false;
 /////////////////////////////////
 export const loadingManager = new THREE.LoadingManager();
 
+const openingContainer = document.getElementById("opening-container");
 const progressBar = document.getElementById("progress-bar");
 const progressBarContainer = document.getElementById("progress-bar-container");
 const projectTitle = document.getElementById("opening-content-1");
@@ -16,7 +17,7 @@ const opening2 = document.getElementById("opening-content-2");
 const opening3 = document.getElementById("opening-content-3");
 const opening4 = document.getElementById("opening-content-4");
 const opening5 = document.getElementById("opening-content-5");
-const opening6 = document.getElementById("opening-content-6");
+// const opening6 = document.getElementById("opening-content-6");
 
 loadingManager.onStart = (url, itemsLoaded, itemsTotal) => {
   console.log(`Started loading: ${url}`);
@@ -164,6 +165,14 @@ boatIconWrapper.addEventListener("mouseenter", function () {
 boatIconWrapper.addEventListener("mouseleave", function () {
   this.querySelector(".icon-boat-light").style.opacity = 1;
   this.querySelector(".icon-boat-dark").style.opacity = 0;
+});
+
+boatIconWrapper.addEventListener("click", () => {
+  openingContainer.style.opacity = 0;
+
+  setTimeout(() => {
+    openingContainer.style.display = "none";
+  }, 2000);
 });
 
 // hover to update book icon
