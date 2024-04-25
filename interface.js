@@ -17,16 +17,15 @@ const opening2 = document.getElementById("opening-content-2");
 const opening3 = document.getElementById("opening-content-3");
 const opening4 = document.getElementById("opening-content-4");
 const opening5 = document.getElementById("opening-content-5");
-// const opening6 = document.getElementById("opening-content-6");
 
 loadingManager.onStart = (url, itemsLoaded, itemsTotal) => {
   console.log(`Started loading: ${url}`);
-  // progressBarContainer.style.display = "block"; // Display the progress bar.
 };
 
 loadingManager.onLoad = () => {
   console.log("All resources loaded");
 
+  // hide progress bar
   progressBarContainer.style.opacity = 0;
 
   setTimeout(function () {
@@ -34,16 +33,18 @@ loadingManager.onLoad = () => {
     projectTitle.style.display = "flex";
   }, 2000);
 
+  // show title
   setTimeout(function () {
     projectTitle.style.opacity = 1;
   }, 3000);
 
+  // hide title
   setTimeout(function () {
     projectTitle.style.opacity = 0;
-  }, 5000);
+  }, 5500);
 
+  // show text1
   setTimeout(function () {
-    // console.log("hide title");
     projectTitle.style.display = "none";
     opening2.style.display = "flex";
   }, 6000);
@@ -52,57 +53,50 @@ loadingManager.onLoad = () => {
     opening2.style.opacity = 1;
   }, 7000);
 
+  // hide text1
   setTimeout(function () {
     opening2.style.opacity = 0;
-  }, 9000);
+  }, 10000);
 
+  // show text2
   setTimeout(function () {
     opening2.style.display = "none";
     opening3.style.display = "flex";
-  }, 10000);
-
-  setTimeout(function () {
-    opening3.style.opacity = 1;
   }, 11000);
 
   setTimeout(function () {
-    opening3.style.opacity = 0;
-  }, 13000);
+    opening3.style.opacity = 1;
+  }, 12000);
 
+  // hide text2
+  setTimeout(function () {
+    opening3.style.opacity = 0;
+  }, 15000);
+
+  // show headphone reminder
   setTimeout(function () {
     opening3.style.display = "none";
     opening4.style.display = "flex";
-  }, 14000);
+  }, 16000);
 
   setTimeout(function () {
     opening4.style.opacity = 1;
-  }, 15000);
-
-  setTimeout(function () {
-    opening4.style.opacity = 0;
   }, 17000);
 
+  // hide headphone reminder
+  setTimeout(function () {
+    opening4.style.opacity = 0;
+  }, 20000);
+
+  // show instructions
   setTimeout(function () {
     opening4.style.display = "none";
     opening5.style.display = "flex";
-  }, 18000);
+  }, 21000);
 
   setTimeout(function () {
     opening5.style.opacity = 1;
-  }, 19000);
-
-  // setTimeout(function () {
-  //   opening5.style.opacity = 0;
-  // }, 21000);
-
-  // setTimeout(function () {
-  //   opening5.style.display = "none";
-  //   opening6.style.display = "flex";
-  // }, 22000);
-
-  // setTimeout(function () {
-  //   opening6.style.opacity = 1;
-  // }, 23000);
+  }, 22000);
 };
 
 loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
