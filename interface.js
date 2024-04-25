@@ -1,6 +1,114 @@
 import { curIsland } from "./island.js";
+// import { loadingManager } from "./index.js";
+import * as THREE from "three";
 
 export let showJournal = false;
+
+/////////////////////////////////
+// ********* OPENING ********* //
+/////////////////////////////////
+export const loadingManager = new THREE.LoadingManager();
+
+const progressBar = document.getElementById("progress-bar");
+const progressBarContainer = document.getElementById("progress-bar-container");
+const projectTitle = document.getElementById("opening-content-1");
+const opening2 = document.getElementById("opening-content-2");
+const opening3 = document.getElementById("opening-content-3");
+const opening4 = document.getElementById("opening-content-4");
+const opening5 = document.getElementById("opening-content-5");
+const opening6 = document.getElementById("opening-content-6");
+
+loadingManager.onStart = (url, itemsLoaded, itemsTotal) => {
+  console.log(`Started loading: ${url}`);
+  // progressBarContainer.style.display = "block"; // Display the progress bar.
+};
+
+loadingManager.onLoad = () => {
+  console.log("All resources loaded");
+
+  progressBarContainer.style.opacity = 0;
+
+  setTimeout(function () {
+    progressBarContainer.style.display = "none";
+    projectTitle.style.display = "flex";
+  }, 2000);
+
+  setTimeout(function () {
+    projectTitle.style.opacity = 1;
+  }, 3000);
+
+  setTimeout(function () {
+    projectTitle.style.opacity = 0;
+  }, 5000);
+
+  setTimeout(function () {
+    // console.log("hide title");
+    projectTitle.style.display = "none";
+    opening2.style.display = "flex";
+  }, 6000);
+
+  setTimeout(function () {
+    opening2.style.opacity = 1;
+  }, 7000);
+
+  setTimeout(function () {
+    opening2.style.opacity = 0;
+  }, 9000);
+
+  setTimeout(function () {
+    opening2.style.display = "none";
+    opening3.style.display = "flex";
+  }, 10000);
+
+  setTimeout(function () {
+    opening3.style.opacity = 1;
+  }, 11000);
+
+  setTimeout(function () {
+    opening3.style.opacity = 0;
+  }, 13000);
+
+  setTimeout(function () {
+    opening3.style.display = "none";
+    opening4.style.display = "flex";
+  }, 14000);
+
+  setTimeout(function () {
+    opening4.style.opacity = 1;
+  }, 15000);
+
+  setTimeout(function () {
+    opening4.style.opacity = 0;
+  }, 17000);
+
+  setTimeout(function () {
+    opening4.style.display = "none";
+    opening5.style.display = "flex";
+  }, 18000);
+
+  setTimeout(function () {
+    opening5.style.opacity = 1;
+  }, 19000);
+
+  // setTimeout(function () {
+  //   opening5.style.opacity = 0;
+  // }, 21000);
+
+  // setTimeout(function () {
+  //   opening5.style.display = "none";
+  //   opening6.style.display = "flex";
+  // }, 22000);
+
+  // setTimeout(function () {
+  //   opening6.style.opacity = 1;
+  // }, 23000);
+};
+
+loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
+  const progress = (itemsLoaded / itemsTotal) * 100;
+  console.log(`Loading ${url}: ${Math.round(progress)}%`);
+  progressBar.value = progress;
+};
 
 // get mouse pos
 let mouseX, mouseY;
@@ -45,8 +153,21 @@ for (let i = 0; i < xButtons.length; i++) {
   });
 }
 
+// hover to update boat icon
+const boatIconWrapper = document.getElementsByClassName("icon-boat-wrapper")[0];
+
+boatIconWrapper.addEventListener("mouseenter", function () {
+  this.querySelector(".icon-boat-light").style.opacity = 0;
+  this.querySelector(".icon-boat-dark").style.opacity = 1;
+});
+
+boatIconWrapper.addEventListener("mouseleave", function () {
+  this.querySelector(".icon-boat-light").style.opacity = 1;
+  this.querySelector(".icon-boat-dark").style.opacity = 0;
+});
+
 // hover to update book icon
-let bookIconWrappers = document.getElementsByClassName("icon-book-wrapper");
+const bookIconWrappers = document.getElementsByClassName("icon-book-wrapper");
 
 for (let i = 0; i < bookIconWrappers.length; i++) {
   let thisBookIconWrapper = bookIconWrappers[i];
@@ -79,36 +200,10 @@ for (let i = 0; i < bookIconWrappers.length; i++) {
 }
 
 // hover to show translate
-// console.log(document.querySelector(".journal-dots"));
-// let journalDotsBucika = document.getElementsByClassName("journal-dots bucika");
-// // console.log(journalDotsBucika);
-
-// for (let i = 0; i < journalDotsBucika.length; i++) {
-//   let thisDot = journalDotsBucika[i];
-//   thisDot.addEventListener("mouseenter", () => {
-//     // console.log("show translation");
-//     let translationCard = document.querySelector(".journal-translation");
-//     // console.log(journalEntries.bucika[i]);
-//     translationCard.innerHTML = journalEntries.bucika[i];
-//     // translationCard.style.position = "absolute";
-//     translationCard.style.visibility = "visible";
-//     translationCard.style.opacity = 1;
-//     translationCard.style.left = mouseX + "px";
-//     translationCard.style.top = mouseY + "px";
-//   });
-//   thisDot.addEventListener("mouseleave", () => {
-//     // console.log("hide translation");
-//     let translationCard = document.querySelector(".journal-translation");
-//     // translationCard.style.position = "float";
-//     translationCard.style.visibility = "hidden";
-//     // translationCard.style.left = "0px";
-//     // translationCard.style.top = "0px";
-//     translationCard.style.opacity = 0;
-//   });
-// }
-
 function showTranslation(songName) {
-  let journalDots = document.getElementsByClassName(`journal-dots ${songName}`);
+  const journalDots = document.getElementsByClassName(
+    `journal-dots ${songName}`
+  );
 
   for (let i = 0; i < journalDots.length; i++) {
     let thisDot = journalDots[i];

@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
 
-import { camera, controls, outlinePass, loadingManager } from "./index.js";
+import { camera, controls, outlinePass } from "./index.js";
 
 // import { OutlineEffect } from "three/examples/jsm/effects/OutlineEffect.js";
 

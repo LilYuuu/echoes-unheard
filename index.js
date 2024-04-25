@@ -13,6 +13,8 @@ import { FirstPersonControls } from "three/addons/controls/FirstPersonControls.j
 import { Island } from "./island.js";
 import { Boat } from "./boat.js";
 
+import { loadingManager } from "./interface.js";
+
 import { Cloud, Clouds, CLOUD_URL } from "./Cloud.js";
 
 // postprocessing
@@ -24,7 +26,7 @@ import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { FXAAShader } from "three/addons/shaders/FXAAShader.js";
 
 // loading manager
-export const loadingManager = new THREE.LoadingManager();
+// export const loadingManager = new THREE.LoadingManager();
 
 // loadingManager.onStart = function (url, itemsLoaded, itemsTotal) {
 //   console.log(
@@ -37,29 +39,6 @@ export const loadingManager = new THREE.LoadingManager();
 //       " files."
 //   );
 // };
-
-const progressBar = document.getElementById("progress-bar");
-const progressBarContainer = document.getElementById("progress-bar-container");
-
-loadingManager.onStart = (url, itemsLoaded, itemsTotal) => {
-  console.log(`Started loading: ${url}`);
-  // progressBarContainer.style.display = "block"; // Display the progress bar.
-};
-
-loadingManager.onLoad = () => {
-  console.log("All resources loaded");
-
-  progressBarContainer.style.opacity = 0;
-  setTimeout(function () {
-    progressBarContainer.style.display = "none";
-  }, 2000);
-};
-
-loadingManager.onProgress = (url, itemsLoaded, itemsTotal) => {
-  const progress = (itemsLoaded / itemsTotal) * 100;
-  console.log(`Loading ${url}: ${Math.round(progress)}%`);
-  progressBar.value = progress;
-};
 
 let scene, renderer;
 export let camera;

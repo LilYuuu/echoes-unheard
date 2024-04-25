@@ -23,16 +23,98 @@ body {
     z-index: -1;
   }
 
-  #progress-bar-container {
+  #opening-container {
     position: absolute;
     left: 50%;
-    top: 80%;
+    top: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
     height: 100%;
-    /* background-color: rgba(0,0,0,0.7); */
-    background-color: rgba(0, 8, 29, 0.5);
+    background-color: rgba(0, 8, 29, 0.6);
     backdrop-filter: blur(10px);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all ease 1s;
+  }
+
+  .opening-content {
+    display: none;
+    /* display: flex; */
+    opacity: 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all ease 1s;
+  }
+
+  .opening-content img {
+    width: 16vw;
+    margin: 3vh;
+  }
+
+  #opening-content-headphones {
+    width: 3vw;
+  }
+
+  .instructions-wrapper {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .instructions {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10vw;
+  }
+
+  #icon-keyboard {
+    width: 15vh;
+  }
+
+  #icon-mouse {
+    width: 4vh;
+  }
+
+  .icon-boat-wrapper {
+    /* border-radius: 32px;
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s; */
+    width: 64px;
+    height: 64px;
+    /* bottom: 32px; */
+    /* left: 50%;
+    transform: translate(-50%, -30%);  */
+  }
+
+  .icon-boat-wrapper img {
+    width: 32px;
+    position: absolute;
+    height: auto;
+  }
+
+  .icon-boat-dark {
+    opacity: 0;
+  }
+
+  .opening-content p {
+    font-size: 1.3rem;
+  }
+
+  #progress-bar-container {
+    /* position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%); */
+    /* width: 100%;
+    height: 100%; */
+    /* background-color: rgba(0,0,0,0.7); */
+
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -41,29 +123,26 @@ body {
   }
 
   #progress-bar {
-    width: 15%;
-    margin-top: 1%;
-    height: 1%;
+    width: 25vh;
+    margin-top: 2vh;
+    height: 0.5vh;
     transition: all ease 1s;
-    /* border: 0.5px solid white; */
     border-radius: 10px;
   }
 
   #progress-bar::-webkit-progress-bar {
     border-radius: 10px;
     background-color: rgba(255, 255, 255, 0.3);
-    /* height: 2%; */
   }
 
   #progress-bar::-webkit-progress-value {
     border-radius: 10px;
     background-color: white;
-    /* height: 2%; */
   }
 
   #progress-bar-container label {
     color: white;
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
 
 
@@ -98,6 +177,10 @@ body {
     height: 100%;
   }
 
+  .title-card .icon-wrapper {
+    position: absolute;
+  }
+
   .title-card .icon-wrapper img {
     position: absolute;
     height: auto;
@@ -109,7 +192,6 @@ body {
     justify-content: center;
     /* border: 1px solid white; */
     border-radius: 32px;
-    position: absolute;
     background-color: rgba(255, 255, 255, 0.3);
     transition: all 0.3s;
   }
@@ -147,6 +229,8 @@ body {
 
   .title-card .icon-book-wrapper img {
     width: 32px;
+    position: absolute;
+    height: auto;
   }
 
   .icon-book-filled {
