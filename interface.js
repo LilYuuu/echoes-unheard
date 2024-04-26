@@ -3,6 +3,15 @@ import { curIsland } from "./island.js";
 import * as THREE from "three";
 
 export let showJournal = false;
+let playAudio = false;
+
+export function getPlayAudio() {
+  return playAudio;
+}
+
+export function setPlayAudio(val) {
+  playAudio = val;
+}
 
 /////////////////////////////////
 // ********* OPENING ********* //
@@ -162,6 +171,8 @@ boatIconWrapper.addEventListener("mouseleave", function () {
 });
 
 boatIconWrapper.addEventListener("click", () => {
+  playAudio = true;
+
   openingContainer.style.opacity = 0;
 
   setTimeout(() => {

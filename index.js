@@ -13,7 +13,7 @@ import { FirstPersonControls } from "three/addons/controls/FirstPersonControls.j
 import { Island } from "./island.js";
 import { Boat } from "./boat.js";
 
-import { loadingManager } from "./interface.js";
+import { loadingManager, getPlayAudio, setPlayAudio } from "./interface.js";
 
 import { Cloud, Clouds, CLOUD_URL } from "./Cloud.js";
 
@@ -344,7 +344,7 @@ async function init() {
   await islandRuan.loadAudio("./audio/ruan.mp3");
   islandRuan.setPosition(30, -0.08, -15);
   islandRuan.setScale(3);
-  islandRuan.playAudio();
+  // islandRuan.playAudio();
   islands.push(islandRuan);
 
   islandBucika = new Island(scene, audioListener, mouse, camera, "bucika");
@@ -353,7 +353,7 @@ async function init() {
   islandBucika.setPosition(3, -0.08, -30);
   islandBucika.setRotation(0, Math.PI / 3, 0);
   islandBucika.setScale(3);
-  islandBucika.playAudio();
+  // islandBucika.playAudio();
   islands.push(islandBucika);
 
   islandGerman = new Island(scene, audioListener, mouse, camera, "german");
@@ -362,7 +362,7 @@ async function init() {
   islandGerman.setPosition(-30, -0.08, -15);
   islandGerman.setRotation(0, -Math.PI / 6, 0);
   islandGerman.setScale(3);
-  islandGerman.playAudio();
+  // islandGerman.playAudio();
   islands.push(islandGerman);
 
   // boat
@@ -405,6 +405,14 @@ function loop() {
 
   // clouds.update(camera, clock.getElapsedTime(), clock.getDelta());
 
+  if (getPlayAudio()) {
+    for (let i = 0; i < islands.length; i++) {
+      let thisIsland = islands[i];
+      thisIsland.playAudio();
+    }
+    setPlayAudio(false);
+  }
+
   if (boat.mesh) {
     boat.update();
   }
@@ -414,10 +422,6 @@ function loop() {
     thisIsland.update();
     if (thisIsland.hover) {
       pointerOn = true;
-      // console.log("hovering on: " + thisIsland.name);
-      // turn on outline
-      // outlinePass.selectedObjects = [thisIsland.mesh];
-      // selectedIslands.push(thisIsland.mesh)
       break;
     } else {
       pointerOn = false;
