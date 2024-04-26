@@ -181,6 +181,10 @@ body {
     position: absolute;
   }
 
+  .journal .icon-wrapper {
+    position: absolute;
+  }
+
   .title-card .icon-wrapper img {
     position: absolute;
     height: auto;

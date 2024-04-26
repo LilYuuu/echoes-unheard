@@ -3,6 +3,8 @@ import { curIsland } from "./island.js";
 import * as THREE from "three";
 
 export let showJournal = false;
+
+// to control the audio
 let playAudio = false;
 
 export function getPlayAudio() {
@@ -199,7 +201,19 @@ for (let i = 0; i < bookIconWrappers.length; i++) {
   thisBookIconWrapper.addEventListener("click", () => {
     showJournal = true;
 
-    const journal = document.querySelector(".journal");
+    const titleCards = document.getElementsByClassName("title-card");
+    for (let i = 0; i < titleCards.length; i++) {
+      let thisCard = titleCards[i];
+      if (thisCard.style.display != "none") {
+        thisCard.style.opacity = 0;
+
+        setTimeout(() => {
+          thisCard.style.display = "none";
+        }, 2000);
+      }
+    }
+
+    // const journal = document.querySelector(".journal");
 
     const journalContainer = document.querySelector(`#journal-${curIsland}`);
     console.log(`#journal-${curIsland}`);
