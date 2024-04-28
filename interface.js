@@ -1,8 +1,17 @@
 import { curIsland } from "./island.js";
-// import { loadingManager } from "./index.js";
+import { getIsFinished, setIsFinished } from "./index.js";
 import * as THREE from "three";
 
-export let showJournal = false;
+// to control raycasting
+let htmlOn = true;
+
+export function getHtmlOn() {
+  return htmlOn;
+}
+
+export function setHtmlOn(val) {
+  htmlOn = val;
+}
 
 // to control the audio
 let playAudio = false;
@@ -132,7 +141,7 @@ for (let i = 0; i < xButtons.length; i++) {
     // console.log(ev.target.tagName);
 
     // no matter the x button is in a journal container or a title card
-    showJournal = false;
+    htmlOn = false;
 
     let targetParent;
     if (ev.target.tagName == "DIV") {
@@ -172,14 +181,30 @@ boatIconWrapper.addEventListener("mouseleave", function () {
   this.querySelector(".icon-boat-dark").style.opacity = 0;
 });
 
+// hover to update pen icon
+const penIconWrapper = document.getElementsByClassName("icon-pen-wrapper")[0];
+penIconWrapper.addEventListener("mouseenter", function () {
+  this.querySelector(".icon-pen-light").style.opacity = 0;
+  this.querySelector(".icon-pen-dark").style.opacity = 1;
+});
+
+penIconWrapper.addEventListener("mouseleave", function () {
+  this.querySelector(".icon-pen-dark").style.opacity = 0;
+  this.querySelector(".icon-pen-light").style.opacity = 1;
+});
+
+// on clicking boat icon, hide the opening container
 boatIconWrapper.addEventListener("click", () => {
   playAudio = true;
+  htmlOn = false;
 
   openingContainer.style.opacity = 0;
 
   setTimeout(() => {
     openingContainer.style.display = "none";
   }, 2000);
+
+  penIconWrapper.style.opacity = 1;
 });
 
 // hover to update book icon
@@ -199,7 +224,7 @@ for (let i = 0; i < bookIconWrappers.length; i++) {
   });
 
   thisBookIconWrapper.addEventListener("click", () => {
-    showJournal = true;
+    htmlOn = true;
 
     const titleCards = document.getElementsByClassName("title-card");
     for (let i = 0; i < titleCards.length; i++) {

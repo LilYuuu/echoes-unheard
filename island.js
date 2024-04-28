@@ -1,7 +1,13 @@
 import * as THREE from "three";
 import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
 
-import { camera, controls, outlinePass } from "./index.js";
+import {
+  camera,
+  controls,
+  outlinePass,
+  getIslandsVisited,
+  setIslandsVisited,
+} from "./index.js";
 
 // import { OutlineEffect } from "three/examples/jsm/effects/OutlineEffect.js";
 
@@ -11,11 +17,9 @@ import { camera, controls, outlinePass } from "./index.js";
 //   defaultAlpha: 0.8,
 // });
 
-import { showJournal } from "./interface.js";
+import { getHtmlOn, setHtmlOn } from "./interface.js";
 
 export let curIsland;
-
-let titleCards = document.getElementsByClassName("title-card");
 
 export class Island {
   constructor(scene, listener, mouse, camera, name) {
@@ -108,25 +112,38 @@ export class Island {
   onClick() {
     if (this.hover) {
       // console.log("clicked on object");
-      // console.log(curIsland);
+
       curIsland = this.name;
       console.log(curIsland);
-      console.log(showJournal);
+
+      if (!getIslandsVisited().includes(this.name)) {
+        setIslandsVisited(this.name);
+        console.log(getIslandsVisited());
+      }
+
       let card = document.getElementById(`title-card-${this.name}`);
-      // console.log(`title-card-${this.name}`);
-      // console.log(card);
+
       // hide all the other cards if they are on
-      // console.log(titleCards);
+      const titleCards = document.getElementsByClassName("title-card");
 
       for (let i = 0; i < titleCards.length; i++) {
         if (titleCards[i].style.display != "none") {
-          titleCards[i].style.display = "none";
+          titleCards[i].style.opacity = 0;
+          setTimeout(function () {
+            titleCards[i].style.display = "none";
+          }, 300);
         }
       }
+
+      // then show this card
       card.style.display = "block";
       setTimeout(function () {
         card.style.opacity = 1;
       }, 100);
+
+      if (!getHtmlOn()) {
+        setHtmlOn(true);
+      }
 
       // this.moveCamera();
       // controls.enabled = true;

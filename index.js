@@ -13,9 +13,14 @@ import { FirstPersonControls } from "three/addons/controls/FirstPersonControls.j
 import { Island } from "./island.js";
 import { Boat } from "./boat.js";
 
-import { loadingManager, getPlayAudio, setPlayAudio } from "./interface.js";
+import {
+  loadingManager,
+  getPlayAudio,
+  setPlayAudio,
+  getHtmlOn,
+} from "./interface.js";
 
-import { Cloud, Clouds, CLOUD_URL } from "./Cloud.js";
+// import { Cloud, Clouds, CLOUD_URL } from "./Cloud.js";
 
 // postprocessing
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
@@ -24,21 +29,6 @@ import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
 import { OutlinePass } from "three/addons/postprocessing/OutlinePass.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 import { FXAAShader } from "three/addons/shaders/FXAAShader.js";
-
-// loading manager
-// export const loadingManager = new THREE.LoadingManager();
-
-// loadingManager.onStart = function (url, itemsLoaded, itemsTotal) {
-//   console.log(
-//     "Started loading file: " +
-//       url +
-//       ".\nLoaded " +
-//       itemsLoaded +
-//       " of " +
-//       itemsTotal +
-//       " files."
-//   );
-// };
 
 let scene, renderer;
 export let camera;
@@ -51,7 +41,23 @@ let audioListener;
 
 let islands = [];
 let islandRuan, islandBucika, islandGerman;
-// export let curIsland = "hi";
+
+let islandsVisited = [];
+export function getIslandsVisited() {
+  return islandsVisited;
+}
+export function setIslandsVisited(name) {
+  islandsVisited.push(name);
+}
+
+let isFinished = false;
+export function getIsFinished() {
+  return isFinished;
+}
+
+export function setIsFinished(val) {
+  isFinished = val;
+}
 
 let boat;
 
@@ -60,13 +66,13 @@ let pointerOn = false;
 let makeTurn = false;
 let rotateSpeed = 0.005;
 
-// let pointLight;
-
 let particles, particleGeo, particleNum;
 
-let clouds;
-let cloudArray;
-let cloudTexture = new THREE.TextureLoader().load(CLOUD_URL);
+// let counter = 0;
+
+// let clouds;
+// let cloudArray;
+// let cloudTexture = new THREE.TextureLoader().load(CLOUD_URL);
 
 // postprocessing
 let composer, effectFXAA;
@@ -405,6 +411,7 @@ function loop() {
 
   // clouds.update(camera, clock.getElapsedTime(), clock.getDelta());
 
+  // play the audio on clicking the boat icon
   if (getPlayAudio()) {
     for (let i = 0; i < islands.length; i++) {
       let thisIsland = islands[i];
@@ -417,6 +424,8 @@ function loop() {
     boat.update();
   }
 
+  // enable raycasting when there is no html element on
+  // if (!getHtmlOn()) {
   for (let i = 0; i < islands.length; i++) {
     let thisIsland = islands[i];
     thisIsland.update();
@@ -428,6 +437,7 @@ function loop() {
       outlinePass.selectedObjects = [];
     }
   }
+  // }
 
   if (pointerOn) {
     document.querySelector("canvas").style.cursor = "pointer";
